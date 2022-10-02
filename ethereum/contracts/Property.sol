@@ -8,7 +8,7 @@ contract Property is ERC721 {
 
     constructor() ERC721("Property", "PPT") {}
 
-    function mint(address to, uint256 tokenId) public {
-        _safeMint(to, tokenId);
+    function mint(address _to, uint256 _tokenId) public {
+        _safeMint(_to, _tokenId);
     }
 }

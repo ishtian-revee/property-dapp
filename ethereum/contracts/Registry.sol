@@ -44,9 +44,9 @@ contract Registry {
         nProperties.increment();
         Property(propertyContract).mint(msg.sender, pid);   // minting property non-fungible token
 
-        PropertyInfo memory _property = PropertyInfo(_price, _location, _size, true);
-        properties[pid] = _property;
-        propertyList.push(_property);   // pushing to an array so that we can fetch the array of properties
+        PropertyInfo memory prop = PropertyInfo(_price, _location, _size, true);
+        properties[pid] = prop;
+        propertyList.push(prop);   // pushing to an array so that we can fetch the array of properties
 
         emit NewPropertyEvent(pid, msg.sender, _price, _location, _size);
     }
@@ -60,9 +60,9 @@ contract Registry {
         (bool success, ) = address(propertyOwner).call{ value: msg.value }("");
         require(success, "Failed to send money to the owner.");
 
+        Property(propertyContract).safeTransferFrom(propertyOwner, msg.sender, _pid);   // transferring the property token to the buyer
         properties[_pid].isAvailable = false;   // only after succsfull transaction setting the property is not available
         propertyList[_pid].isAvailable = false;
-        Property(propertyContract).transferFrom(propertyOwner, msg.sender, properties[_pid].price);     // transferring the property token to the buyer
 
         Purchase memory purchase = Purchase(_pid, msg.sender, propertyOwner, properties[_pid].price);
         purchases.push(purchase);   // pushing to the purchase array
