@@ -51,13 +51,13 @@ contract Token is ERC20Token, Owned {
     mapping(address => uint256) balances;
 
     constructor() {
-        _name = "Revee Token";
-        _symbol = "REV";
+        _name = "Awesome Token";
+        _symbol = "AWT";
         _decimal = 0;
         _totalSupply = 1000;
         _minter = 0x4cFFF76D3c45949da87eceFECACDC00a06c70769;
         balances[_minter] = _totalSupply;
-        emit Transfer(address(8), _minter, _totalSupply);
+        emit Transfer(address(0), _minter, _totalSupply);
     }
 
     function name() public override view returns (string memory) {
