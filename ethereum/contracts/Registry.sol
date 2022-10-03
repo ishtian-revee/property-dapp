@@ -10,7 +10,7 @@ contract Registry {
     using Counters for Counters.Counter;
 
     Counters.Counter nProperties;
-    address public propertyContract;
+    Property property;
     mapping(uint256 => PropertyInfo) public properties;
     PropertyInfo[] public propertyList;
     Purchase[] public purchases;
@@ -36,13 +36,13 @@ contract Registry {
 
     constructor(address _propertyContract) {
         nProperties.reset();
-        propertyContract = _propertyContract;
+        property = Property(_propertyContract);
     }
 
     function addProperty(uint256 _price, string memory _location, uint256 _size) public {
         uint256 pid = nProperties.current();
         nProperties.increment();
-        Property(propertyContract).mint(msg.sender, pid);   // minting property non-fungible token
+        property.mint(msg.sender, pid);     // minting property non-fungible token
 
         PropertyInfo memory prop = PropertyInfo(_price, _location, _size, true);
         properties[pid] = prop;
@@ -52,7 +52,7 @@ contract Registry {
     }
 
     function buyProperty(uint256 _pid) public payable {
-        address propertyOwner = Property(propertyContract).ownerOf(_pid);
+        address propertyOwner = property.ownerOf(_pid);
         require(msg.sender != propertyOwner, "Property owner cannot buy their own property.");
         require(properties[_pid].isAvailable, "Currently this property is not available.");
         require(msg.value == properties[_pid].price, "Not sufficient fund.");   // checking if buyer is sending exact price amount or not
@@ -60,7 +60,7 @@ contract Registry {
         (bool success, ) = address(propertyOwner).call{ value: msg.value }("");
         require(success, "Failed to send money to the owner.");
 
-        Property(propertyContract).safeTransferFrom(propertyOwner, msg.sender, _pid);   // transferring the property token to the buyer
+        property.safeTransferFrom(propertyOwner, msg.sender, _pid);   // transferring the property token to the buyer
         properties[_pid].isAvailable = false;   // only after succsfull transaction setting the property is not available
         propertyList[_pid].isAvailable = false;
 
@@ -71,7 +71,7 @@ contract Registry {
     }
 
     function setPropertyAvailability(uint256 _pid, bool _status) public {
-        require(Property(propertyContract).ownerOf(_pid) == msg.sender, "Only owner of the property can update the availability status");
+        require(property.ownerOf(_pid) == msg.sender, "Only owner of the property can update the availability status");
         properties[_pid].isAvailable = _status;
         propertyList[_pid].isAvailable = _status;
         emit PropertyAvailabilityEvent(_pid, _status);
