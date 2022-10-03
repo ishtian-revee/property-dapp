@@ -40,6 +40,8 @@ contract Owned {
     }
 }
 
+// Our own custom ERC20 token (AWT)
+
 contract Token is ERC20Token, Owned {
 
     string public _name;
@@ -48,14 +50,14 @@ contract Token is ERC20Token, Owned {
     uint256 public _totalSupply;
     address public _minter;
 
-    mapping(address => uint256) balances;
+    mapping(address => uint256) public balances;
 
     constructor() {
         _name = "Awesome Token";
         _symbol = "AWT";
         _decimal = 0;
         _totalSupply = 1000;
-        _minter = 0x4cFFF76D3c45949da87eceFECACDC00a06c70769;
+        _minter = msg.sender;
         balances[_minter] = _totalSupply;
         emit Transfer(address(0), _minter, _totalSupply);
     }
@@ -101,14 +103,14 @@ contract Token is ERC20Token, Owned {
     // }
 
     function mint(uint256 _amount) public returns(bool) {
-        require(msg.sender == _minter, "Only minter can mint");
+        require(msg.sender == _minter, "Only minter can mint.");
         balances[_minter] += _amount;
         _totalSupply += _amount;
         return true;
     }
 
     function confiscate(address _target, uint256 _amount) public returns(bool) {
-        require(msg.sender == _minter, "Only minter can confiscate");
+        require(msg.sender == _minter, "Only minter can confiscate.");
         if (balances[_target] >= _amount) {
             balances[_target] -= _amount;
             _totalSupply -= _amount;

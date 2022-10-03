@@ -11,16 +11,16 @@ contract Registry {
     using Counters for Counters.Counter;
 
     Counters.Counter nProperties;
-    Property property;
-    Token token;
+    Property property;              // refers to our property NFT
+    Token token;                    // refers to our custom AWT ERC20 token
     mapping(uint256 => PropertyInfo) public properties;
     PropertyInfo[] public propertyList;
     Purchase[] public purchases;
 
     struct PropertyInfo {
-        uint256 price;
+        uint256 price;              // price in AWT
         string location;
-        uint256 size;
+        uint256 size;               // in squarefeet
         bool isAvailable;
     }
 
@@ -49,12 +49,12 @@ contract Registry {
 
         PropertyInfo memory prop = PropertyInfo(_price, _location, _size, true);
         properties[pid] = prop;
-        propertyList.push(prop);   // pushing to an array so that we can fetch the array of properties
+        propertyList.push(prop);            // pushing to an array so that we can fetch the array of properties
 
         emit NewPropertyEvent(pid, msg.sender, _price, _location, _size);
     }
 
-    function buyProperty(uint256 _pid) public payable {
+    function buyProperty(uint256 _pid) public {
         address propertyOwner = property.ownerOf(_pid);
         require(msg.sender != propertyOwner, "Property owner cannot buy their own property.");
         require(properties[_pid].isAvailable, "Currently this property is not available.");
@@ -66,10 +66,10 @@ contract Registry {
         // (bool success, ) = address(propertyOwner).call{ value: msg.value }("");
         // require(success, "Failed to send money to the owner.");
 
-        // this following codes is for transferring AWT token
+        // this following codes is for transferring AWT
         uint256 userBalance = token.balanceOf(msg.sender);
         require(userBalance >= propertyPrice, "User does not have sufficient AWT tokens.");
-        (bool success) = token.transfer(msg.sender, propertyPrice);
+        (bool success) = token.transferFrom(msg.sender, propertyOwner, propertyPrice);          // transferring AWT from buyer account to property owner account
         require(success, "Failed to transfer token to user.");
 
         property.safeTransferFrom(propertyOwner, msg.sender, _pid);   // transferring the property token to the buyer
