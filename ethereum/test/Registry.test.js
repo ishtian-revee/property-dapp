@@ -4,9 +4,9 @@ const Token = artifacts.require("Token");
 
 contract("Token", (accounts) => {
   beforeEach(async () => {
-    registryInstance = await Registry.deployed();
     propertyInstance = await Property.deployed();
     tokenInstance = await Token.deployed();
+    registryInstance = await Registry.deployed(propertyInstance.address, tokenInstance.address);
   });
 
   it("deploys registry contract", () => {

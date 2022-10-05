@@ -3,8 +3,8 @@ const Token = artifacts.require("Token");
 
 contract("Vendor", (accounts) => {
   beforeEach(async () => {
-    vendorInstance = await Vendor.deployed();
     tokenInstance = await Token.deployed();
+    vendorInstance = await Vendor.deployed(tokenInstance.address);
     minter = await tokenInstance._minter();
   });
 
