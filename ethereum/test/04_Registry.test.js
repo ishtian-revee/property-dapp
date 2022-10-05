@@ -5,7 +5,7 @@ const Token = artifacts.require("Token");
 let property;
 let propertyOwner;
 
-contract("Token", (accounts) => {
+contract("Registry", (accounts) => {
   beforeEach(async () => {
     propertyInstance = await Property.deployed();
     tokenInstance = await Token.deployed();
