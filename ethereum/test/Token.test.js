@@ -58,7 +58,7 @@ contract("Token", (accounts) => {
     assert.equal(accountOneBalance, "100");
   });
 
-  it("100 AWT successfully transferred from minter", async () => {
+  it("100 AWT successfully deducted from minter account", async () => {
     const minterBalance = await instance.balanceOf(minter);
     assert.equal(minterBalance, "800");
   });
