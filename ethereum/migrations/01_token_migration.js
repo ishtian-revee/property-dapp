@@ -1,4 +1,4 @@
-const Token = abstract.require("Token");
+const Token = artifacts.require("Token");
 
 module.exports = function (deployer) {
   deployer.deploy(Token);
