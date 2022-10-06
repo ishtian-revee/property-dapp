@@ -5,7 +5,7 @@ const Property = artifacts.require("Property");
 const Vendor = artifacts.require("Vendor");
 const Token = artifacts.require("Token");
 
-const buildPath = path.resolve(__dirname, "build");
+const buildPath = path.resolve(__dirname, "../build");
 fs.removeSync(buildPath);
 fs.ensureDirSync(buildPath);
 fs.outputJsonSync(
