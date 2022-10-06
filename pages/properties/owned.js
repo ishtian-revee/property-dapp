@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import Layout from "../../components/Layout";
 
 class PropertyOwned extends Component {
   render() {
     return(
-      <div>Property Owned!</div>
+      <Layout>
+
+      </Layout>
     );
   }
 }

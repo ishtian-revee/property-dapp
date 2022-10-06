@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import Layout from "../../components/Layout";
 
 class TokenPurchase extends Component {
   render() {
     return(
-      <div>Token Purchase!</div>
+      <Layout>
+
+      </Layout>
     );
   }
 }

@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import Layout from "../../components/Layout";
 
 class PropertyAdd extends Component {
   render() {
     return(
-      <div>Property Add!</div>
+      <Layout>
+
+      </Layout>
     );
   }
 }
