@@ -1,3 +1,4 @@
 # local environment files
+.env
 ethereum/.env
 .next
