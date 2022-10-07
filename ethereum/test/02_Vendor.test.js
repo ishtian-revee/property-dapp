@@ -39,7 +39,7 @@ contract("Vendor", (accounts) => {
     const vendorBalance = await tokenInstance.balanceOf(vendorInstance.address);
     await vendorInstance.buyToken({
       from: minter,
-      value: 2,
+      value: web3.utils.toWei("2", "ether"),
     });
     const minterBalance = await tokenInstance.balanceOf(minter);
     assert.equal(minterBalance, "200");
@@ -53,7 +53,7 @@ contract("Vendor", (accounts) => {
 
   it("vendor has 2 ETH in the balance", async () => {
     const balance = await web3.eth.getBalance(vendorInstance.address);
-    assert.equal(balance, "2");
+    assert.equal(balance, web3.utils.toWei("2", "ether"));
   });
 
   it("allows minter to sell 100 tokens to vendor", async () => {
@@ -70,7 +70,7 @@ contract("Vendor", (accounts) => {
 
   it("vendor has 1 ETH", async () => {
     const balance = await web3.eth.getBalance(vendorInstance.address);
-    assert.equal(balance, 1);
+    assert.equal(balance, web3.utils.toWei("1", "ether"));
   });
 
   it("after withdraw vendor account has 0 balance", async () => {

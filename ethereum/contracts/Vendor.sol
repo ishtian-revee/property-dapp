@@ -20,14 +20,14 @@ contract Vendor is Ownable {
     function buyToken() public payable {
         require(msg.value > 0, "You need to send some ETH to proceed.");
 
-        uint256 amountToBuy = msg.value * tokenPerEther;            // Ex: 10 AWT = 0.1 ETH * 100
-        uint256 vendorBalance = token.balanceOf(address(this));     // getting vendor contract balance of AWT
+        uint256 amountToBuy = (msg.value * tokenPerEther) / (1 ether);    // Ex: 10 AWT = 0.1 ETH * 100
+        uint256 vendorBalance = token.balanceOf(address(this));           // getting vendor contract balance of AWT
         require(vendorBalance >= amountToBuy, "Vendor has insufficient AWT token.");
 
-        (bool success) = token.transfer(msg.sender, amountToBuy);   // transferring AWT to the buyer account
+        (bool success) = token.transfer(msg.sender, amountToBuy);         // transferring AWT to the buyer account
         require(success, "Failed to transfer token to user.");
 
-        emit BuyTokens(msg.sender, msg.value, amountToBuy);         // recording buy token event
+        emit BuyTokens(msg.sender, msg.value, amountToBuy);               // recording buy token event
     }
 
     function sellToken(uint256 _amountToSell) public {
@@ -43,7 +43,7 @@ contract Vendor is Ownable {
         (bool success) = token.transferFrom(msg.sender, address(this), _amountToSell);      // transferring AWT from seller account to vendor account
         require(success, "Failed to transfer tokens from user to vendor.");
 
-        (success, ) = msg.sender.call{ value: amoutOfETHToTransfer }("");   // transferring ETH to seller account
+        (success, ) = msg.sender.call{ value: amoutOfETHToTransfer * (1 ether) }("");       // transferring ETH to seller account
         require(success, "Failed to send ETH to the user.");
     }
 

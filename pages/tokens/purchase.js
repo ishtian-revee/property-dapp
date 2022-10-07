@@ -87,8 +87,8 @@ class TokenPurchase extends Component {
       });
     } else {
       try {
-        await vendor.methods.sellToken(this.state.amount).send({
-          from: myAccount,
+        await vendor.methods.sellToken(this.state.sellAmount).send({
+          from: this.props.myAccount,
         });
         Router.pushRoute(`/tokens/purchase`);
       } catch (err) {
