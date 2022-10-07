@@ -19,7 +19,7 @@ const Header = () => {
 
       <Menu.Menu position="right">
         <Link route="/tokens/purchase">
-          <a className="item">Buy AWT!</a>
+          <a className="item">Get AWT</a>
         </Link>
       </Menu.Menu>
     </Menu>

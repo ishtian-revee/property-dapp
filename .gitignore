@@ -1,2 +1,3 @@
 # local environment files
 .env
+.next
