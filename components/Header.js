@@ -10,16 +10,16 @@ const Header = () => {
       </Link>
 
       <Link route="/properties/owned">
-        <a className="item">Owned Properties</a>
+        <a className="item"><h5>Owned Properties</h5></a>
       </Link>
 
       <Link route="/properties/add">
-        <a className="item">Add Property</a>
+        <a className="item"><h5>Add Property</h5></a>
       </Link>
 
       <Menu.Menu position="right">
         <Link route="/tokens/purchase">
-          <a className="item">Get AWT</a>
+          <a className="item"><h5>Get AWT</h5></a>
         </Link>
       </Menu.Menu>
     </Menu>
