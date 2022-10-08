@@ -1,20 +1,23 @@
 import React, { Component } from "react";
-import { Header, Button, Card, Message } from "semantic-ui-react";
+import { Header, Segment, Button, Card, Message } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import PropertyCard from "../components/PropertyCard";
 import web3 from "../ethereum/web3";
 import registry from "../ethereum/registry";
 import property from "../ethereum/property";
+import token from "../ethereum/token";
 
 class PropertyIndex extends Component {
   static async getInitialProps() {
     let propList;
     let myAccount;
+    let balance;
 
     try {
-      const properties = await registry.methods.getProperties().call();
       const accounts = await web3.eth.getAccounts();
       myAccount = accounts[0];
+      balance = await token.methods.balanceOf(myAccount).call();
+      const properties = await registry.methods.getProperties().call();
       console.log("Properties: " + properties);
 
       propList = await Promise.all(
@@ -29,6 +32,7 @@ class PropertyIndex extends Component {
     }
     return {
       myAccount,
+      balance,
       propList,
     };
   }
@@ -61,6 +65,11 @@ class PropertyIndex extends Component {
         />
         <br />
         <Card.Group>{this.renderProperties()}</Card.Group>
+        <br /><br />
+        <Segment clearing>
+          <Header as='h4' floated='left'>Account: {this.props.myAccount}</Header>
+          <Header as='h4' floated='right'>Balance: {this.props.balance} AWT</Header>
+        </Segment>
       </Layout>
     );
   }

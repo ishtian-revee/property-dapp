@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, Button } from "semantic-ui-react";
 import registry from "../ethereum/registry";
 import property from "../ethereum/property";
+import { Router } from "../routes";
 
 class PropertyCard extends Component {
   buyProperty = async () => {
@@ -9,6 +10,7 @@ class PropertyCard extends Component {
       await registry.methods.buyProperty(this.props.id).send({
         from: this.props.myAccount,
       });
+      Router.pushRoute(`/`);
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
