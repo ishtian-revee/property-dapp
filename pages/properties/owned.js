@@ -5,17 +5,28 @@ import PropertyCard from "../../components/PropertyCard";
 import web3 from "../../ethereum/web3";
 import registry from "../../ethereum/registry";
 import property from "../../ethereum/property";
+import { Router } from "../../routes";
 
 class PropertyOwned extends Component {
+  state = {
+    approvalLoading: false,
+    rejectionLoading: false
+  };
+
   static async getInitialProps() {
     let propList;
     let myAccount;
+    let isApproved;
 
     try {
       const properties = await registry.methods.getProperties().call();
       const accounts = await web3.eth.getAccounts();
       myAccount = accounts[0];
+      isApproved = await property.methods.isApprovedForAll(
+        myAccount, registry.options.address
+      ).call();
       console.log("Properties: " + properties);
+      console.log("isApproved: " + isApproved);
 
       propList = await Promise.all(
         properties.map(async (item, index) => ({
@@ -30,19 +41,28 @@ class PropertyOwned extends Component {
     return {
       myAccount,
       propList,
+      isApproved,
     };
   }
 
   setApproval = async (approve) => {
+    if (approve) {
+      this.setState({ approvalLoading: true });
+    } else {
+      this.setState({ rejectionLoading: true });
+    }
+
     try {
       await property.methods
         .setApprovalForAll(registry.options.address, approve)
         .send({
           from: this.props.myAccount,
         });
+        Router.pushRoute(`/properties/owned`);
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
+    this.setState({ approvalLoading: false, rejectionLoading: false });
   };
 
   renderProperties() {
@@ -78,10 +98,11 @@ class PropertyOwned extends Component {
           content="Approval"
           subheader="Set for all on this contract so that anyone can buy your properties"
         />
-        <Button primary onClick={() => this.setApproval(true)}>
+        <h4>Current approval status: {this.props.isApproved ? "true" : "false"}</h4>
+        <Button loading={this.state.approvalLoading} primary onClick={() => this.setApproval(true)}>
           Set Approval for All
         </Button>
-        <Button basic color="red" onClick={() => this.setApproval(false)}>
+        <Button loading={this.state.rejectionLoading} basic color="red" onClick={() => this.setApproval(false)}>
           Reject for All
         </Button>
       </Layout>
