@@ -45,6 +45,7 @@ class PropertyIndex extends Component {
           isAvailable={item.isAvailable}
           myAccount={this.props.myAccount}
           owner={item.owner}
+          isForOwner={false}
         />
       );
     });
