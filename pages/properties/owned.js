@@ -33,6 +33,18 @@ class PropertyOwned extends Component {
     };
   }
 
+  setApproval = async (approve) => {
+    try {
+      await property.methods
+        .setApprovalForAll(registry.options.address, approve)
+        .send({
+          from: this.props.myAccount,
+        });
+    } catch (err) {
+      console.log("ERROR: " + err.message);
+    }
+  };
+
   renderProperties() {
     return this.props.propList.map((item, index) => {
       return (
@@ -61,6 +73,17 @@ class PropertyOwned extends Component {
         />
         <br />
         <Card.Group>{this.renderProperties()}</Card.Group>
+        <Header
+          as="h2"
+          content="Approval"
+          subheader="Set for all on this contract so that anyone can buy your properties"
+        />
+        <Button primary onClick={() => this.setApproval(true)}>
+          Set Approval for All
+        </Button>
+        <Button basic color="red" onClick={() => this.setApproval(false)}>
+          Reject for All
+        </Button>
       </Layout>
     );
   }

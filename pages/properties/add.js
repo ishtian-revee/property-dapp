@@ -43,6 +43,7 @@ class PropertyAdd extends Component {
         .send({
           from: accounts[0],
         });
+        Router.pushRoute(`/properties/owned`);
     } catch (err) {
       this.setState({ errorMessage: err.message });
     }

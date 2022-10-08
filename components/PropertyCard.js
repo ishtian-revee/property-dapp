@@ -1,7 +1,19 @@
 import React, { Component } from "react";
 import { Card, Button } from "semantic-ui-react";
+import registry from "../ethereum/registry";
+import property from "../ethereum/property";
 
 class PropertyCard extends Component {
+  buyProperty = async () => {
+    try {
+      await registry.methods.buyProperty(this.props.id).send({
+        from: this.props.myAccount,
+      });
+    } catch (err) {
+      console.log("ERROR: " + err.message);
+    }
+  };
+
   render() {
     const {
       id,
@@ -33,7 +45,7 @@ class PropertyCard extends Component {
             </Card.Content>
             <Card.Content extra>
               <div className="ui two buttons">
-                <Button basic color="teal" color="green">
+                <Button basic color="teal">
                   Set as Unavailable
                 </Button>
               </div>
@@ -59,7 +71,9 @@ class PropertyCard extends Component {
             </Card.Content>
             <Card.Content extra>
               <div className="ui two buttons">
-                <Button primary>Buy Property</Button>
+                <Button primary onClick={this.buyProperty}>
+                  Buy Property
+                </Button>
               </div>
             </Card.Content>
           </Card>
