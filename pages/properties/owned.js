@@ -96,7 +96,7 @@ class PropertyOwned extends Component {
         <Header
           as="h2"
           content="Approval"
-          subheader="Set for all on this contract so that anyone can buy your properties"
+          subheader="Set approval for all on this contract so that anyone can buy your properties"
         />
         <h4>Current approval status: {this.props.isApproved ? "true" : "false"}</h4>
         <Button loading={this.state.approvalLoading} primary onClick={() => this.setApproval(true)}>

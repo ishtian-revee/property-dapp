@@ -3,5 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/": "pages/index.js",
-  "/properties/owned": "pages/properties/owned.js"
+  "/tokens/purchase": "pages/tokens/purchase.js",
+  "/properties/add": "pages/properties/add.js"
 }

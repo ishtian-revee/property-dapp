@@ -16,6 +16,17 @@ class PropertyCard extends Component {
     }
   };
 
+  setAvailable = async () => {
+    try {
+      await registry.methods.setPropertyAvailability(this.props.id, !this.props.isAvailable).send({
+        from: this.props.myAccount,
+      });
+      Router.pushRoute(`/properties/owned`);
+    } catch (err) {
+      console.log("ERROR: " + err.message);
+    }
+  };
+
   render() {
     const {
       id,
@@ -41,14 +52,16 @@ class PropertyCard extends Component {
                 <br />
                 Price: <strong>{price} AWT</strong>
                 <br />
+                Status: <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
+                <br />
                 <br />
                 Owner: <strong>{owner}</strong>
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
               <div className="ui two buttons">
-                <Button basic color="teal">
-                  Set as Unavailable
+                <Button basic color={isAvailable ? "teal" : "blue"} onClick={this.setAvailable}>
+                  Set as {isAvailable ? "Unavailable" : "Available"}
                 </Button>
               </div>
             </Card.Content>
@@ -56,7 +69,7 @@ class PropertyCard extends Component {
         );
       }
     } else {
-      if (owner !== myAccount) {
+      if (owner !== myAccount && isAvailable) {
         return (
           <Card>
             <Card.Content style={{ overflowWrap: "break-word" }}>
