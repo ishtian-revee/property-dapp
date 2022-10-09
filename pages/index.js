@@ -64,7 +64,7 @@ class PropertyIndex extends Component {
           subheader="Check for property location, size, price, and buy your property"
         />
         <br />
-        <Card.Group>{this.renderProperties()}</Card.Group>
+        <Card.Group itemsPerRow={3}>{this.renderProperties()}</Card.Group>
         <br /><br />
         <Segment clearing>
           <Header as='h4' floated='left'>Account: {this.props.myAccount}</Header>

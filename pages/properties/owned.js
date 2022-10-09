@@ -92,7 +92,7 @@ class PropertyOwned extends Component {
           subheader="Set your properties as unavailable when you are not willing to sell."
         />
         <br />
-        <Card.Group>{this.renderProperties()}</Card.Group>
+        <Card.Group itemsPerRow={3}>{this.renderProperties()}</Card.Group>
         <Header
           as="h2"
           content="Approval"
