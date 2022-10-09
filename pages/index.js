@@ -38,21 +38,23 @@ class PropertyIndex extends Component {
   }
 
   renderProperties() {
-    return this.props.propList.map((item, index) => {
-      return (
-        <PropertyCard
-          key={index}
-          id={index}
-          price={item.price}
-          location={item.location}
-          size={item.size}
-          isAvailable={item.isAvailable}
-          myAccount={this.props.myAccount}
-          owner={item.owner}
-          isForOwner={false}
-        />
-      );
-    });
+    if (this.props.propList != null) {
+      return this.props.propList.map((item, index) => {
+        return (
+          <PropertyCard
+            key={index}
+            id={index}
+            price={item.price}
+            location={item.location}
+            size={item.size}
+            isAvailable={item.isAvailable}
+            myAccount={this.props.myAccount}
+            owner={item.owner}
+            isForOwner={false}
+          />
+        );
+      });
+    }
   }
 
   render() {
