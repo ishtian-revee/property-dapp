@@ -1,4 +1,4 @@
 # local environment files
 .env
-ethereum/.env
-.next
+.next/
+node_modules/
