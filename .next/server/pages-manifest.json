@@ -1,9 +1,0 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/properties/owned": "pages/properties/owned.js",
-  "/": "pages/index.js",
-  "/tokens/purchase": "pages/tokens/purchase.js",
-  "/properties/add": "pages/properties/add.js"
-}
