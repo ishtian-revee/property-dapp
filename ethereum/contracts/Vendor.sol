@@ -71,8 +71,8 @@ contract Vendor is Ownable {
         require(success, "Failed to withdraw");
     }
 
-    // returns token name, token symbol, token decimals, token total supply, minter account address, vendor balance, my (msg.sender) balance
-    function getSummary() public view returns(string memory, string memory, uint8, uint256, address, uint256, uint256) {
+    // returns token name, token symbol, token decimals, token total supply, minter account address, vendor token balance, my (msg.sender) balance, vendor wallet balance
+    function getSummary() public view returns(string memory, string memory, uint8, uint256, address, uint256, uint256, uint256) {
         return (
             token.name(),
             token.symbol(),
@@ -80,7 +80,8 @@ contract Vendor is Ownable {
             token.totalSupply(),
             token.minter(),
             token.balanceOf(address(this)),
-            token.balanceOf(msg.sender)
+            token.balanceOf(msg.sender),
+            address(this).balance
         );
     }
 
