@@ -4,7 +4,7 @@ contract("Token", (accounts) => {
   beforeEach(async () => {
     instance = await Token.deployed();
     owner = await instance.owner();
-    minter = await instance._minter();
+    minter = await instance.minter();
   });
 
   it("deploys token contract", () => {

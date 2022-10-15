@@ -5,11 +5,12 @@ contract("Vendor", (accounts) => {
   beforeEach(async () => {
     tokenInstance = await Token.deployed();
     vendorInstance = await Vendor.deployed(tokenInstance.address);
-    minter = await tokenInstance._minter();
+    minter = await tokenInstance.minter();
+    summary = await vendorInstance.getSummary();
   });
 
   it("deploys vendor contract", () => {
-    assert.ok(instance.contract);
+    assert.ok(vendorInstance.contract);
   });
 
   it("minter has currently all the supplies", async () => {
@@ -77,5 +78,21 @@ contract("Vendor", (accounts) => {
     await vendorInstance.withdraw();
     const balance = await web3.eth.getBalance(vendorInstance.address);
     assert.equal(balance, 0);
+  });
+
+  it("token name from summary is Awesome Token", async () => {
+    assert.equal(summary[0], "Awesome Token");
+  });
+
+  it("token symbol from summary is AWT", async () => {
+    assert.equal(summary[1], "AWT");
+  });
+
+  it("token totalSupply from summary is 1000", async () => {
+    assert.equal(summary[3], 1000);
+  });
+
+  it("token minter account address from summary is correct", async () => {
+    assert.equal(summary[4], minter);
   });
 });
