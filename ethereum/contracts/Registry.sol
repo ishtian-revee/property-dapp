@@ -18,6 +18,8 @@ contract Registry {
     Purchase[] public purchases;
 
     struct PropertyInfo {
+        uint256 pid;
+        address owner;
         uint256 price;              // price in AWT
         string location;
         uint256 size;               // in squarefeet
@@ -48,7 +50,7 @@ contract Registry {
         nProperties.increment();
         property.mint(msg.sender, pid);     // minting property non-fungible token
 
-        PropertyInfo memory prop = PropertyInfo(_price, _location, _size, true);
+        PropertyInfo memory prop = PropertyInfo(pid, msg.sender, _price, _location, _size, true);
         properties[pid] = prop;
         propertyList.push(prop);            // pushing to an array so that we can fetch the array of properties
 
