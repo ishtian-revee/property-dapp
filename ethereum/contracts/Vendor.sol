@@ -10,6 +10,16 @@ contract Vendor is Ownable {
     Token token;                            // refers to our custom AWT ERC20 token
     uint256 public tokenPerEther = 100;     // 1 ETH = 100 AWT
 
+    struct Purchase {
+        string purchaseType;
+        address from;
+        address buyer;
+        uint256 amount;
+        uint256 time;
+    }
+
+    Purchase[] public purchases;
+
     event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
 
     constructor(address _tokenAddress) {
@@ -26,6 +36,9 @@ contract Vendor is Ownable {
 
         (bool success) = token.transfer(msg.sender, amountToBuy);         // transferring AWT to the buyer account
         require(success, "Failed to transfer token to user.");
+
+        Purchase memory purchase = Purchase("BUY", address(this), msg.sender, amountToBuy, block.timestamp);
+        purchases.push(purchase);
 
         emit BuyTokens(msg.sender, msg.value, amountToBuy);               // recording buy token event
     }
@@ -45,6 +58,9 @@ contract Vendor is Ownable {
 
         (success, ) = msg.sender.call{ value: amoutOfETHToTransfer * (1 ether) }("");       // transferring ETH to seller account
         require(success, "Failed to send ETH to the user.");
+
+        Purchase memory purchase = Purchase("SELL", msg.sender, address(this), _amountToSell, block.timestamp);
+        purchases.push(purchase);
     }
 
     // only owner of the vendor contract can withdraw
@@ -66,5 +82,9 @@ contract Vendor is Ownable {
             token.balanceOf(address(this)),
             token.balanceOf(msg.sender)
         );
+    }
+
+    function getPurchases() public view returns(Purchase[] memory) {
+        return purchases;
     }
 }

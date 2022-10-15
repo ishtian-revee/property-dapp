@@ -29,6 +29,7 @@ contract Registry {
         address buyer;
         address owner;
         uint256 price;
+        uint256 time;
     }
 
     // events
@@ -76,7 +77,7 @@ contract Registry {
         properties[_pid].isAvailable = false;   // only after succsfull transaction setting the property is not available
         propertyList[_pid].isAvailable = false;
 
-        Purchase memory purchase = Purchase(_pid, msg.sender, propertyOwner, propertyPrice);
+        Purchase memory purchase = Purchase(_pid, msg.sender, propertyOwner, propertyPrice, block.timestamp);
         purchases.push(purchase);   // pushing to the purchase array
 
         emit BuyProperty(msg.sender, _pid, propertyPrice);
