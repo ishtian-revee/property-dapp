@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
-    "@truffle/hdwallet-provider": "^2.0.17",
+    "@truffle/hdwallet-provider": "^2.1.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^10.1.0",
     "ganache-cli": "^6.12.2",
