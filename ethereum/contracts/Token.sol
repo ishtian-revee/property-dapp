@@ -44,22 +44,22 @@ contract Owned {
 
 contract Token is ERC20Token, Owned {
 
-    string public _name;
-    string public _symbol;
-    uint8 public _decimal;
-    uint256 public _totalSupply;
-    address public _minter;
+    string private _name;
+    string private _symbol;
+    uint8 private _decimal;
+    uint256 private _totalSupply;
+    address public minter;
 
-    mapping(address => uint256) public balances;
+    mapping(address => uint256) private balances;
 
     constructor() {
         _name = "Awesome Token";
         _symbol = "AWT";
         _decimal = 0;
         _totalSupply = 1000;
-        _minter = msg.sender;
-        balances[_minter] = _totalSupply;
-        emit Transfer(address(0), _minter, _totalSupply);
+        minter = msg.sender;
+        balances[minter] = _totalSupply;
+        emit Transfer(address(0), minter, _totalSupply);
     }
 
     function name() public override view returns (string memory) {
@@ -103,14 +103,14 @@ contract Token is ERC20Token, Owned {
     // }
 
     function mint(uint256 _amount) public returns(bool) {
-        require(msg.sender == _minter, "Only minter can mint.");
-        balances[_minter] += _amount;
+        require(msg.sender == minter, "Only minter can mint.");
+        balances[minter] += _amount;
         _totalSupply += _amount;
         return true;
     }
 
     function confiscate(address _target, uint256 _amount) public returns(bool) {
-        require(msg.sender == _minter, "Only minter can confiscate.");
+        require(msg.sender == minter, "Only minter can confiscate.");
         if (balances[_target] >= _amount) {
             balances[_target] -= _amount;
             _totalSupply -= _amount;
