@@ -1,25 +1,31 @@
 {
-  "name": "property_dapp",
+  "name": "property-dapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "main": "routes.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishtian-revee/property-dapp.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ishtian-revee/property-dapp/issues"
+  },
+  "homepage": "https://github.com/ishtian-revee/property-dapp#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
     "@truffle/hdwallet-provider": "^2.1.0",
+    "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "fs-extra": "^10.1.0",
     "ganache-cli": "^6.12.2",
-    "mocha": "^10.0.0",
+    "mocha": "^10.1.0",
     "next": "^12.3.1",
     "next-routes": "^1.4.2",
     "react": "^18.2.0",
