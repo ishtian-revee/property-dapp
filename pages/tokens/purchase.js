@@ -25,47 +25,41 @@ class TokenPurchase extends Component {
   };
 
   static async getInitialProps(props) {
-    let vendorBalance;
-    let myBalance;
+    let summary;
     let vendorAccount;
     let myAccount;
-    let name;
-    let symbol;
-    // let totalSupply;
-    let minterAccount;
 
     try {
       const accounts = await web3.eth.getAccounts();
       vendorAccount = vendor.options.address;
       myAccount = accounts[0];
+      summary = await vendor.methods.getSummary().call();
 
-      name = await token.methods._name().call();
-      symbol = await token.methods._symbol().call();
-      // totalSupply = await token.methods._totalSupply().call();
-      vendorBalance = await token.methods.balanceOf(vendorAccount).call();
-      myBalance = await token.methods.balanceOf(myAccount).call();
-      minterAccount = await token.methods._minter().call();
-
-      console.log("Token name: " + name);
-      console.log("Token symbol: " + symbol);
-      // console.log("Total suppy: " + totalSupply);
+      console.log("Token name: " + summary[0]);
+      console.log("Token symbol: " + summary[1]);
+      console.log("Decimals: " + summary[2]);
+      console.log("Total supply: " + summary[3]);
+      console.log("Minter: " + summary[4]);
       console.log("Vendor account: " + vendorAccount);
-      console.log("Vendor balance: " + vendorBalance);
+      console.log("Vendor balance: " + summary[5]);
       console.log("My account: " + myAccount);
-      console.log("My balance: " + myBalance);
-      console.log("Minter: " + minterAccount);
+      console.log("My balance: " + summary[6]);
+      console.log("Vendor eth balance: " + summary[7]);
     } catch (err) {
       console.log(err.message);
     }
 
     return {
-      vendorAccount,
-      vendorBalance,
-      myAccount,
-      myBalance,
-      name,
-      symbol,
-      minterAccount,
+      name: summary[0],
+      symbol: summary[1],
+      decimals: summary[2],
+      totalSupply: summary[3],
+      minter: summary[4],
+      vendorAccount: vendorAccount,
+      vendorBalance: summary[5],
+      myAccount: myAccount,
+      myBalance: summary[6],
+      vendorEthBalance: summary[7],
     };
   }
 
@@ -129,21 +123,19 @@ class TokenPurchase extends Component {
 
   renderCards() {
     const {
-      vendorAccount,
       name,
       symbol,
+      decimals,
+      totalSupply,
+      minter,
+      vendorAccount,
       vendorBalance,
+      myAccount,
       myBalance,
+      vendorEthBalance,
     } = this.props;
 
     const items = [
-      {
-        header: vendorAccount,
-        meta: "",
-        description: "Address of this vendor smart contract.",
-        color: "blue",
-        style: { overflowWrap: "break-word" },
-      },
       {
         header: name,
         meta: "",
@@ -159,9 +151,30 @@ class TokenPurchase extends Component {
         style: { overflowWrap: "break-word" },
       },
       {
+        header: totalSupply,
+        meta: "",
+        description: "Total supply of " + name + "s.",
+        color: "blue",
+        style: { overflowWrap: "break-word" },
+      },
+      {
+        header: vendorAccount,
+        meta: "",
+        description: "Address of this vendor smart contract.",
+        color: "orange",
+        style: { overflowWrap: "break-word" },
+      },
+      {
         header: vendorBalance + " AWT",
         meta: "",
-        description: "Total available tokens.",
+        description: "Total available tokens to buy.",
+        color: "orange",
+        style: { overflowWrap: "break-word" },
+      },
+      {
+        header: vendorEthBalance + " ETH",
+        meta: "",
+        description: "Vendor ETH balance.",
         color: "orange",
         style: { overflowWrap: "break-word" },
       },
@@ -169,14 +182,14 @@ class TokenPurchase extends Component {
         header: myBalance + " AWT",
         meta: "",
         description: "Number of AWT I have.",
-        color: "orange",
+        color: "green",
         style: { overflowWrap: "break-word" },
       },
       {
         header: "100 AWT",
         meta: "",
         description: "Number of AWT equivalent to 1 ETH.",
-        color: "orange",
+        color: "green",
         style: { overflowWrap: "break-word" },
       },
     ];
@@ -191,7 +204,7 @@ class TokenPurchase extends Component {
           <Grid.Row style={{ marginTop: "10px" }}>
             <Grid.Column>{this.renderCards()}</Grid.Column>
           </Grid.Row>
-          <Grid.Row style={{ marginTop: "40px" }}>
+          <Grid.Row style={{ marginTop: "20px" }}>
             <Grid.Column width={8}>
               <Header
                 as="h2"
