@@ -25,6 +25,7 @@ class TokenPurchase extends Component {
     purchaseLoading: false,
     sellLoading: false,
     mintLoading: false,
+    transferLoading: false,
   };
 
   static async getInitialProps(props) {
@@ -72,6 +73,7 @@ class TokenPurchase extends Component {
       purchaseLoading: true,
       buyErrorMessage: "",
       sellErrorMessage: "",
+      mintErrorMessage: "",
     });
 
     if (this.state.buyAmount == 0) {
@@ -103,6 +105,7 @@ class TokenPurchase extends Component {
       sellLoading: true,
       sellErrorMessage: "",
       buyErrorMessage: "",
+      mintErrorMessage: "",
     });
 
     if (this.state.sellAmount == 0) {
@@ -120,6 +123,40 @@ class TokenPurchase extends Component {
         this.setState({ sellErrorMessage: err.message });
       }
       this.setState({ sellLoading: false, sellAmount: "" });
+    }
+  };
+
+  mintToken = async () => {
+    event.preventDefault();
+    this.setState({
+      mintLoading: true,
+      mintErrorMessage: "",
+      sellErrorMessage: "",
+      buyErrorMessage: "",
+    });
+
+    if (this.state.mintAmount == 0) {
+      this.setState({
+        mintLoading: false,
+        mintErrorMessage: "AWT amout is not inserted.",
+      });
+    } else {
+      if (this.props.myAccount == this.props.minter) {
+        try {
+          await token.methods.mint(this.state.mintAmount).send({
+            from: this.props.myAccount,
+          });
+          Router.pushRoute(`/tokens/purchase`);
+        } catch (err) {
+          this.setState({ mintErrorMessage: err.message });
+        }
+        this.setState({ mintLoading: false, mintAmount: "" });
+      } else {
+        this.setState({
+          mintLoading: false,
+          mintErrorMessage: "You are not minter of AWT.",
+        });
+      }
     }
   };
 
@@ -291,6 +328,56 @@ class TokenPurchase extends Component {
                   error
                   header="Oops!"
                   content={this.state.sellErrorMessage}
+                />
+              </Form>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column width={8}>
+              <Header
+                as="h2"
+                content="Mint AWT"
+                subheader="Only minter can mint new Awesome Token (AWT)"
+              />
+              <Form
+                onSubmit={this.mintToken}
+                error={!!this.state.mintErrorMessage}
+              >
+                <label>
+                  <strong>Amount</strong>
+                </label>
+                <Form.Group widths="equal">
+                  <Form.Field>
+                    <Input
+                      label="AWT"
+                      labelPosition="right"
+                      value={this.state.mintAmount}
+                      onChange={(event) =>
+                        this.setState({ mintAmount: event.target.value })
+                      }
+                    />
+                  </Form.Field>
+                  <Button
+                    loading={this.state.mintLoading}
+                    primary
+                    type="submit"
+                  >
+                    Mint
+                  </Button>
+                  <Button
+                    loading={this.state.transferLoading}
+                    basic
+                    color="teal"
+                    type="submit"
+                  >
+                    Transfer
+                  </Button>
+                </Form.Group>
+                <Message
+                  error
+                  header="Oops!"
+                  content={this.state.mintErrorMessage}
                 />
               </Form>
             </Grid.Column>
