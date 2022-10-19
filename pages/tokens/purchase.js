@@ -18,10 +18,13 @@ class TokenPurchase extends Component {
   state = {
     buyAmount: "",
     sellAmount: "",
+    mintAmount: "",
     buyErrorMessage: "",
     sellErrorMessage: "",
+    mintErrorMessage: "",
     purchaseLoading: false,
     sellLoading: false,
+    mintLoading: false,
   };
 
   static async getInitialProps(props) {
@@ -67,7 +70,6 @@ class TokenPurchase extends Component {
     event.preventDefault();
     this.setState({
       purchaseLoading: true,
-      sellLoading: false,
       buyErrorMessage: "",
       sellErrorMessage: "",
     });
@@ -99,10 +101,10 @@ class TokenPurchase extends Component {
     event.preventDefault();
     this.setState({
       sellLoading: true,
-      purchaseLoading: false,
       sellErrorMessage: "",
       buyErrorMessage: "",
     });
+
     if (this.state.sellAmount == 0) {
       this.setState({
         sellLoading: false,
@@ -192,6 +194,13 @@ class TokenPurchase extends Component {
         color: "green",
         style: { overflowWrap: "break-word" },
       },
+      {
+        header: minter,
+        meta: "",
+        description: "Address of the minter account.",
+        color: "green",
+        style: { overflowWrap: "break-word" },
+      },
     ];
 
     return <Card.Group itemsPerRow={3} items={items} />;
@@ -204,7 +213,8 @@ class TokenPurchase extends Component {
           <Grid.Row style={{ marginTop: "10px" }}>
             <Grid.Column>{this.renderCards()}</Grid.Column>
           </Grid.Row>
-          <Grid.Row style={{ marginTop: "20px" }}>
+
+          <Grid.Row style={{ marginTop: "10px" }}>
             <Grid.Column width={8}>
               <Header
                 as="h2"
@@ -215,24 +225,28 @@ class TokenPurchase extends Component {
                 onSubmit={this.onPurchase}
                 error={!!this.state.buyErrorMessage}
               >
-                <Form.Field>
-                  <label>Amount</label>
-                  <Input
-                    label="AWT"
-                    labelPosition="right"
-                    value={this.state.buyAmount}
-                    onChange={(event) =>
-                      this.setState({ buyAmount: event.target.value })
-                    }
-                  />
-                </Form.Field>
-                <Button
-                  loading={this.state.purchaseLoading}
-                  primary
-                  type="submit"
-                >
-                  Purchase
-                </Button>
+                <label>
+                  <strong>Amount</strong>
+                </label>
+                <Form.Group widths="equal">
+                  <Form.Field>
+                    <Input
+                      label="AWT"
+                      labelPosition="right"
+                      value={this.state.buyAmount}
+                      onChange={(event) =>
+                        this.setState({ buyAmount: event.target.value })
+                      }
+                    />
+                  </Form.Field>
+                  <Button
+                    loading={this.state.purchaseLoading}
+                    primary
+                    type="submit"
+                  >
+                    Purchase
+                  </Button>
+                </Form.Group>
                 <Message
                   error
                   header="Oops!"
@@ -241,9 +255,7 @@ class TokenPurchase extends Component {
               </Form>
             </Grid.Column>
 
-            <Grid.Column width={1}></Grid.Column>
-
-            <Grid.Column width={7}>
+            <Grid.Column width={8}>
               <Header
                 as="h2"
                 content="Sell Your AWT"
@@ -253,20 +265,28 @@ class TokenPurchase extends Component {
                 onSubmit={this.onSell}
                 error={!!this.state.sellErrorMessage}
               >
-                <Form.Field>
-                  <label>Amount</label>
-                  <Input
-                    label="AWT"
-                    labelPosition="right"
-                    value={this.state.sellAmount}
-                    onChange={(event) =>
-                      this.setState({ sellAmount: event.target.value })
-                    }
-                  />
-                </Form.Field>
-                <Button loading={this.state.sellLoading} primary type="submit">
-                  Sell
-                </Button>
+                <label>
+                  <strong>Amount</strong>
+                </label>
+                <Form.Group widths="equal">
+                  <Form.Field>
+                    <Input
+                      label="AWT"
+                      labelPosition="right"
+                      value={this.state.sellAmount}
+                      onChange={(event) =>
+                        this.setState({ sellAmount: event.target.value })
+                      }
+                    />
+                  </Form.Field>
+                  <Button
+                    loading={this.state.sellLoading}
+                    primary
+                    type="submit"
+                  >
+                    Sell
+                  </Button>
+                </Form.Group>
                 <Message
                   error
                   header="Oops!"
