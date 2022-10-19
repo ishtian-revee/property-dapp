@@ -32,12 +32,14 @@ class TokenPurchase extends Component {
     let summary;
     let vendorAccount;
     let myAccount;
+    let myBalance;
 
     try {
       const accounts = await web3.eth.getAccounts();
       vendorAccount = vendor.options.address;
       myAccount = accounts[0];
       summary = await vendor.methods.getSummary().call();
+      myBalance = await token.methods.balanceOf(myAccount).call();
 
       console.log("Token name: " + summary[0]);
       console.log("Token symbol: " + summary[1]);
@@ -49,6 +51,7 @@ class TokenPurchase extends Component {
       console.log("My account: " + myAccount);
       console.log("My balance: " + summary[6]);
       console.log("Vendor eth balance: " + summary[7]);
+      console.log("My Balance: " + myBalance);
     } catch (err) {
       console.log(err.message);
     }
@@ -62,7 +65,7 @@ class TokenPurchase extends Component {
       vendorAccount: vendorAccount,
       vendorBalance: summary[5],
       myAccount: myAccount,
-      myBalance: summary[6],
+      myBalance: myBalance,
       vendorEthBalance: summary[7],
     };
   }
