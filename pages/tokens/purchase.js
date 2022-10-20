@@ -163,6 +163,44 @@ class TokenPurchase extends Component {
     }
   };
 
+  transferToken = async () => {
+    event.preventDefault();
+    this.setState({
+      transferLoading: true,
+      mintErrorMessage: "",
+      sellErrorMessage: "",
+      buyErrorMessage: "",
+    });
+
+    if (this.props.myAccount == this.props.minter) {
+      if (this.props.myBalance > 0) {
+        try {
+          await token.methods
+            .transferFrom(
+              this.props.myAccount,
+              this.props.vendorAccount,
+              this.props.myBalance
+            )
+            .call();
+          Router.pushRoute(`/tokens/purchase`);
+        } catch (err) {
+          this.setState({ mintErrorMessage: err.message });
+        }
+        this.setState({ mintLoading: false });
+      } else {
+        this.setState({
+          transferLoading: false,
+          mintErrorMessage: "You do not have any mined AWT to transfer.",
+        });
+      }
+    } else {
+      this.setState({
+        transferLoading: false,
+        mintErrorMessage: "You are not minter of AWT.",
+      });
+    }
+  };
+
   renderCards() {
     const {
       name,
