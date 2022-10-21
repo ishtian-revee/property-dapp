@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   Message,
+  Divider,
 } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import web3 from "../../ethereum/web3";
@@ -70,7 +71,7 @@ class TokenPurchase extends Component {
     };
   }
 
-  onPurchase = async () => {
+  purchaseToken = async () => {
     event.preventDefault();
     this.setState({
       purchaseLoading: true,
@@ -82,7 +83,7 @@ class TokenPurchase extends Component {
     if (this.state.buyAmount == 0) {
       this.setState({
         purchaseLoading: false,
-        buyErrorMessage: "AWT amout is not inserted.",
+        buyErrorMessage: "AWT amount is not inserted.",
       });
     } else {
       console.log("Amount: " + (this.state.buyAmount / 100).toString());
@@ -102,7 +103,7 @@ class TokenPurchase extends Component {
     }
   };
 
-  onSell = async () => {
+  sellToken = async () => {
     event.preventDefault();
     this.setState({
       sellLoading: true,
@@ -114,7 +115,7 @@ class TokenPurchase extends Component {
     if (this.state.sellAmount == 0) {
       this.setState({
         sellLoading: false,
-        sellErrorMessage: "AWT amout is not inserted.",
+        sellErrorMessage: "AWT amount is not inserted.",
       });
     } else {
       try {
@@ -141,7 +142,7 @@ class TokenPurchase extends Component {
     if (this.state.mintAmount == 0) {
       this.setState({
         mintLoading: false,
-        mintErrorMessage: "AWT amout is not inserted.",
+        mintErrorMessage: "AWT amount is not inserted.",
       });
     } else {
       if (this.props.myAccount == this.props.minter) {
@@ -165,6 +166,7 @@ class TokenPurchase extends Component {
 
   transferToken = async () => {
     event.preventDefault();
+    const { myAccount, vendorAccount, myBalance, minter } = this.props;
     this.setState({
       transferLoading: true,
       mintErrorMessage: "",
@@ -172,21 +174,19 @@ class TokenPurchase extends Component {
       buyErrorMessage: "",
     });
 
-    if (this.props.myAccount == this.props.minter) {
-      if (this.props.myBalance > 0) {
+    if (myAccount === minter) {
+      if (myBalance > 0) {
         try {
           await token.methods
-            .transferFrom(
-              this.props.myAccount,
-              this.props.vendorAccount,
-              this.props.myBalance
-            )
-            .call();
+            .transferFrom(myAccount, vendorAccount, myBalance)
+            .send({
+              from: myAccount,
+            });
           Router.pushRoute(`/tokens/purchase`);
         } catch (err) {
           this.setState({ mintErrorMessage: err.message });
         }
-        this.setState({ mintLoading: false });
+        this.setState({ transferLoading: false });
       } else {
         this.setState({
           transferLoading: false,
@@ -287,28 +287,28 @@ class TokenPurchase extends Component {
   render() {
     return (
       <Layout>
-        <Grid>
+        <Grid relaxed>
           <Grid.Row style={{ marginTop: "10px" }}>
             <Grid.Column>{this.renderCards()}</Grid.Column>
           </Grid.Row>
 
-          <Grid.Row style={{ marginTop: "10px" }}>
+          <Divider />
+
+          <Grid.Row>
             <Grid.Column width={8}>
               <Header
                 as="h2"
                 content="Purchase AWT"
                 subheader="Connect your wallet and get your Awesome Token (AWT)"
               />
-              <Form
-                onSubmit={this.onPurchase}
-                error={!!this.state.buyErrorMessage}
-              >
-                <label>
-                  <strong>Amount</strong>
-                </label>
-                <Form.Group widths="equal">
-                  <Form.Field>
+              <label>
+                <strong>Amount</strong>
+              </label>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={12}>
                     <Input
+                      fluid
                       label="AWT"
                       labelPosition="right"
                       value={this.state.buyAmount}
@@ -316,21 +316,27 @@ class TokenPurchase extends Component {
                         this.setState({ buyAmount: event.target.value })
                       }
                     />
-                  </Form.Field>
-                  <Button
-                    loading={this.state.purchaseLoading}
-                    primary
-                    type="submit"
-                  >
-                    Purchase
-                  </Button>
-                </Form.Group>
+                  </Grid.Column>
+
+                  <Grid.Column width={4}>
+                    <Button
+                      fluid
+                      loading={this.state.purchaseLoading}
+                      primary
+                      onClick={this.purchaseToken}
+                    >
+                      Purchase
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+              {this.state.buyErrorMessage ? (
                 <Message
                   error
                   header="Oops!"
                   content={this.state.buyErrorMessage}
                 />
-              </Form>
+              ) : null}
             </Grid.Column>
 
             <Grid.Column width={8}>
@@ -339,16 +345,14 @@ class TokenPurchase extends Component {
                 content="Sell Your AWT"
                 subheader="Insert the amount of AWT you want to sell"
               />
-              <Form
-                onSubmit={this.onSell}
-                error={!!this.state.sellErrorMessage}
-              >
-                <label>
-                  <strong>Amount</strong>
-                </label>
-                <Form.Group widths="equal">
-                  <Form.Field>
+              <label>
+                <strong>Amount</strong>
+              </label>
+              <Grid columns="equal">
+                <Grid.Row>
+                  <Grid.Column width={12}>
                     <Input
+                      fluid
                       label="AWT"
                       labelPosition="right"
                       value={this.state.sellAmount}
@@ -356,21 +360,27 @@ class TokenPurchase extends Component {
                         this.setState({ sellAmount: event.target.value })
                       }
                     />
-                  </Form.Field>
-                  <Button
-                    loading={this.state.sellLoading}
-                    primary
-                    type="submit"
-                  >
-                    Sell
-                  </Button>
-                </Form.Group>
+                  </Grid.Column>
+
+                  <Grid.Column width={4}>
+                    <Button
+                      fluid
+                      loading={this.state.sellLoading}
+                      primary
+                      onClick={this.sellToken}
+                    >
+                      Sell
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+              {this.state.sellErrorMessage ? (
                 <Message
                   error
                   header="Oops!"
                   content={this.state.sellErrorMessage}
                 />
-              </Form>
+              ) : null}
             </Grid.Column>
           </Grid.Row>
 
@@ -381,16 +391,14 @@ class TokenPurchase extends Component {
                 content="Mint AWT"
                 subheader="Only minter can mint new Awesome Token (AWT)"
               />
-              <Form
-                onSubmit={this.mintToken}
-                error={!!this.state.mintErrorMessage}
-              >
-                <label>
-                  <strong>Amount</strong>
-                </label>
-                <Form.Group widths="equal">
-                  <Form.Field>
+              <label>
+                <strong>Amount</strong>
+              </label>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={10}>
                     <Input
+                      fluid
                       label="AWT"
                       labelPosition="right"
                       value={this.state.mintAmount}
@@ -398,29 +406,35 @@ class TokenPurchase extends Component {
                         this.setState({ mintAmount: event.target.value })
                       }
                     />
-                  </Form.Field>
-                  <Button
-                    loading={this.state.mintLoading}
-                    primary
-                    type="submit"
-                  >
-                    Mint
-                  </Button>
-                  <Button
-                    loading={this.state.transferLoading}
-                    basic
-                    color="teal"
-                    type="submit"
-                  >
-                    Transfer
-                  </Button>
-                </Form.Group>
+                  </Grid.Column>
+
+                  <Grid.Column width={6}>
+                    <Button
+                      loading={this.state.mintLoading}
+                      primary
+                      onClick={this.mintToken}
+                    >
+                      Mint
+                    </Button>
+
+                    <Button
+                      loading={this.state.transferLoading}
+                      basic
+                      color="teal"
+                      onClick={this.transferToken}
+                    >
+                      Transfer
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+              {this.state.mintErrorMessage ? (
                 <Message
                   error
                   header="Oops!"
                   content={this.state.mintErrorMessage}
                 />
-              </Form>
+              ) : null}
             </Grid.Column>
           </Grid.Row>
         </Grid>
