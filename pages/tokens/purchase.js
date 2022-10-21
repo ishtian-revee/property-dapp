@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   Message,
+  Loader,
   Divider,
 } from "semantic-ui-react";
 import Layout from "../../components/Layout";
@@ -20,13 +21,9 @@ class TokenPurchase extends Component {
     buyAmount: "",
     sellAmount: "",
     mintAmount: "",
-    buyErrorMessage: "",
-    sellErrorMessage: "",
-    mintErrorMessage: "",
-    purchaseLoading: false,
-    sellLoading: false,
-    mintLoading: false,
-    transferLoading: false,
+    loadingText: "",
+    errorMessage: "",
+    isLoading: false,
   };
 
   static async getInitialProps(props) {
@@ -74,16 +71,15 @@ class TokenPurchase extends Component {
   purchaseToken = async () => {
     event.preventDefault();
     this.setState({
-      purchaseLoading: true,
-      buyErrorMessage: "",
-      sellErrorMessage: "",
-      mintErrorMessage: "",
+      isLoading: true,
+      loadingText: "Buying AWT...",
+      errorMessage: "",
     });
 
     if (this.state.buyAmount == 0) {
       this.setState({
-        purchaseLoading: false,
-        buyErrorMessage: "AWT amount is not inserted.",
+        isLoading: false,
+        errorMessage: "AWT amount is not inserted.",
       });
     } else {
       console.log("Amount: " + (this.state.buyAmount / 100).toString());
@@ -97,25 +93,24 @@ class TokenPurchase extends Component {
         });
         Router.pushRoute(`/tokens/purchase`);
       } catch (err) {
-        this.setState({ buyErrorMessage: err.message });
+        this.setState({ errorMessage: err.message });
       }
-      this.setState({ purchaseLoading: false, buyAmount: "" });
+      this.setState({ isLoading: false, buyAmount: "" });
     }
   };
 
   sellToken = async () => {
     event.preventDefault();
     this.setState({
-      sellLoading: true,
-      sellErrorMessage: "",
-      buyErrorMessage: "",
-      mintErrorMessage: "",
+      isLoading: true,
+      loadingText: "Selling AWT...",
+      errorMessage: "",
     });
 
     if (this.state.sellAmount == 0) {
       this.setState({
-        sellLoading: false,
-        sellErrorMessage: "AWT amount is not inserted.",
+        isLoading: false,
+        errorMessage: "AWT amount is not inserted.",
       });
     } else {
       try {
@@ -124,25 +119,24 @@ class TokenPurchase extends Component {
         });
         Router.pushRoute(`/tokens/purchase`);
       } catch (err) {
-        this.setState({ sellErrorMessage: err.message });
+        this.setState({ errorMessage: err.message });
       }
-      this.setState({ sellLoading: false, sellAmount: "" });
+      this.setState({ isLoading: false, sellAmount: "" });
     }
   };
 
   mintToken = async () => {
     event.preventDefault();
     this.setState({
-      mintLoading: true,
-      mintErrorMessage: "",
-      sellErrorMessage: "",
-      buyErrorMessage: "",
+      isLoading: true,
+      loadingText: "Minting New AWT...",
+      errorMessage: "",
     });
 
     if (this.state.mintAmount == 0) {
       this.setState({
-        mintLoading: false,
-        mintErrorMessage: "AWT amount is not inserted.",
+        isLoading: false,
+        errorMessage: "AWT amount is not inserted.",
       });
     } else {
       if (this.props.myAccount == this.props.minter) {
@@ -152,13 +146,13 @@ class TokenPurchase extends Component {
           });
           Router.pushRoute(`/tokens/purchase`);
         } catch (err) {
-          this.setState({ mintErrorMessage: err.message });
+          this.setState({ errorMessage: err.message });
         }
-        this.setState({ mintLoading: false, mintAmount: "" });
+        this.setState({ isLoading: false, mintAmount: "" });
       } else {
         this.setState({
-          mintLoading: false,
-          mintErrorMessage: "You are not minter of AWT.",
+          isLoading: false,
+          errorMessage: "You are not minter of AWT.",
         });
       }
     }
@@ -168,10 +162,9 @@ class TokenPurchase extends Component {
     event.preventDefault();
     const { myAccount, vendorAccount, myBalance, minter } = this.props;
     this.setState({
-      transferLoading: true,
-      mintErrorMessage: "",
-      sellErrorMessage: "",
-      buyErrorMessage: "",
+      isLoading: true,
+      loadingText: "Transfering all AWT to the this vendor account...",
+      errorMessage: "",
     });
 
     if (myAccount === minter) {
@@ -184,19 +177,19 @@ class TokenPurchase extends Component {
             });
           Router.pushRoute(`/tokens/purchase`);
         } catch (err) {
-          this.setState({ mintErrorMessage: err.message });
+          this.setState({ errorMessage: err.message });
         }
-        this.setState({ transferLoading: false });
+        this.setState({ isLoading: false });
       } else {
         this.setState({
-          transferLoading: false,
-          mintErrorMessage: "You do not have any mined AWT to transfer.",
+          isLoading: false,
+          errorMessage: "You do not have any mined AWT to transfer.",
         });
       }
     } else {
       this.setState({
-        transferLoading: false,
-        mintErrorMessage: "You are not minter of AWT.",
+        isLoading: false,
+        errorMessage: "You are not minter of AWT.",
       });
     }
   };
@@ -295,6 +288,24 @@ class TokenPurchase extends Component {
           <Divider />
 
           <Grid.Row>
+            <Grid.Column>
+              {this.state.isLoading ? (
+                <Loader active inline="centered">
+                  {this.state.loadingText}
+                </Loader>
+              ) : null}
+
+              {this.state.errorMessage ? (
+                <Message
+                  error
+                  header="Oops!"
+                  content={this.state.errorMessage}
+                />
+              ) : null}
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
             <Grid.Column width={8}>
               <Header
                 as="h2"
@@ -319,24 +330,12 @@ class TokenPurchase extends Component {
                   </Grid.Column>
 
                   <Grid.Column width={4}>
-                    <Button
-                      fluid
-                      loading={this.state.purchaseLoading}
-                      primary
-                      onClick={this.purchaseToken}
-                    >
+                    <Button fluid primary onClick={this.purchaseToken}>
                       Purchase
                     </Button>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
-              {this.state.buyErrorMessage ? (
-                <Message
-                  error
-                  header="Oops!"
-                  content={this.state.buyErrorMessage}
-                />
-              ) : null}
             </Grid.Column>
 
             <Grid.Column width={8}>
@@ -363,24 +362,12 @@ class TokenPurchase extends Component {
                   </Grid.Column>
 
                   <Grid.Column width={4}>
-                    <Button
-                      fluid
-                      loading={this.state.sellLoading}
-                      primary
-                      onClick={this.sellToken}
-                    >
+                    <Button fluid primary onClick={this.sellToken}>
                       Sell
                     </Button>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
-              {this.state.sellErrorMessage ? (
-                <Message
-                  error
-                  header="Oops!"
-                  content={this.state.sellErrorMessage}
-                />
-              ) : null}
             </Grid.Column>
           </Grid.Row>
 
@@ -409,32 +396,16 @@ class TokenPurchase extends Component {
                   </Grid.Column>
 
                   <Grid.Column width={6}>
-                    <Button
-                      loading={this.state.mintLoading}
-                      primary
-                      onClick={this.mintToken}
-                    >
+                    <Button primary onClick={this.mintToken}>
                       Mint
                     </Button>
 
-                    <Button
-                      loading={this.state.transferLoading}
-                      basic
-                      color="teal"
-                      onClick={this.transferToken}
-                    >
+                    <Button basic color="teal" onClick={this.transferToken}>
                       Transfer
                     </Button>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
-              {this.state.mintErrorMessage ? (
-                <Message
-                  error
-                  header="Oops!"
-                  content={this.state.mintErrorMessage}
-                />
-              ) : null}
             </Grid.Column>
           </Grid.Row>
         </Grid>
