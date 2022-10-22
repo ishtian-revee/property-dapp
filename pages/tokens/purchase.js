@@ -197,7 +197,45 @@ class TokenPurchase extends Component {
   };
 
   burnToken = async () => {
+    event.preventDefault();
+    const { myAccount, minter } = this.props;
+    const { burnAccount, burnAmount } = this.state;
+    this.setState({
+      isLoading: true,
+      loadingText: "Burning AWT...",
+      errorMessage: "",
+    });
 
+    if (myAccount === minter) {
+      if (burnAccount == "") {
+        this.setState({
+          isLoading: false,
+          errorMessage: "Burn account address is not provided.",
+        });
+      } else {
+        if (burnAmount == 0) {
+          this.setState({
+            isLoading: false,
+            errorMessage: "AWT amount is not inserted.",
+          });
+        } else {
+          try {
+            await token.methods.confiscate(burnAccount, burnAmount).send({
+              from: myAccount,
+            });
+            Router.pushRoute(`/tokens/purchase`);
+          } catch (err) {
+            this.setState({ errorMessage: err.message });
+          }
+          this.setState({ isLoading: false, burnAccount: "", burnAmount: "" });
+        }
+      }
+    } else {
+      this.setState({
+        isLoading: false,
+        errorMessage: "You are not minter of AWT.",
+      });
+    }
   };
 
   renderCards() {
