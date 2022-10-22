@@ -21,6 +21,8 @@ class TokenPurchase extends Component {
     buyAmount: "",
     sellAmount: "",
     mintAmount: "",
+    burnAmount: "",
+    burnAccount: "",
     loadingText: "",
     errorMessage: "",
     isLoading: false,
@@ -192,6 +194,10 @@ class TokenPurchase extends Component {
         errorMessage: "You are not minter of AWT.",
       });
     }
+  };
+
+  burnToken = async () => {
+
   };
 
   renderCards() {
@@ -371,6 +377,8 @@ class TokenPurchase extends Component {
             </Grid.Column>
           </Grid.Row>
 
+          <Divider />
+
           <Grid.Row>
             <Grid.Column width={8}>
               <Header
@@ -402,6 +410,53 @@ class TokenPurchase extends Component {
 
                     <Button basic color="teal" onClick={this.transferToken}>
                       Transfer
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Grid.Column>
+
+            <Grid.Column width={8}>
+              <Header
+                as="h2"
+                content="Burn AWT"
+                subheader="Only minter can burn certain amount of AWT from specific account"
+              />
+              <label>
+                <strong>Burn Account</strong>
+              </label>
+              <Grid columns="equal" verticalAlign="bottom">
+                <Grid.Row>
+                  <Grid.Column>
+                    <Input
+                      fluid
+                      label="Address"
+                      labelPosition="right"
+                      value={this.state.burnAccount}
+                      onChange={(event) =>
+                        this.setState({ burnAccount: event.target.value })
+                      }
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                  <Grid.Column width={12}>
+                    <label>
+                      <strong>Amount</strong>
+                    </label>
+                    <Input
+                      fluid
+                      label="AWT"
+                      labelPosition="right"
+                      value={this.state.burnAmount}
+                      onChange={(event) =>
+                        this.setState({ burnAmount: event.target.value })
+                      }
+                    />
+                  </Grid.Column>
+                  <Grid.Column width={4}>
+                    <Button fluid primary onClick={this.burnToken}>
+                      Burn
                     </Button>
                   </Grid.Column>
                 </Grid.Row>
