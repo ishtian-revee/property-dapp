@@ -129,6 +129,7 @@ class TokenPurchase extends Component {
 
   mintToken = async () => {
     event.preventDefault();
+    const { myAccount, minter } = this.props;
     this.setState({
       isLoading: true,
       loadingText: "Minting New AWT...",
@@ -141,10 +142,10 @@ class TokenPurchase extends Component {
         errorMessage: "AWT amount is not inserted.",
       });
     } else {
-      if (this.props.myAccount == this.props.minter) {
+      if (myAccount == minter) {
         try {
           await token.methods.mint(this.state.mintAmount).send({
-            from: this.props.myAccount,
+            from: myAccount,
           });
           Router.pushRoute(`/tokens/purchase`);
         } catch (err) {
@@ -238,6 +239,40 @@ class TokenPurchase extends Component {
     }
   };
 
+  withdraw = async () => {
+    event.preventDefault();
+    const { myAccount, minter, vendorEthBalance } = this.props;
+    this.setState({
+      isLoading: true,
+      loadingText: "Withdrawing...",
+      errorMessage: "",
+    });
+
+    if (myAccount === minter) {
+      if (vendorEthBalance > 0) {
+        try {
+          await vendor.methods.withdraw().send({
+            from: myAccount,
+          });
+          Router.pushRoute(`/tokens/purchase`);
+        } catch (err) {
+          this.setState({ errorMessage: err.message });
+        }
+        this.setState({ isLoading: false });
+      } else {
+        this.setState({
+          isLoading: false,
+          errorMessage: "Vendor has insufficient balance.",
+        });
+      }
+    } else {
+      this.setState({
+        isLoading: false,
+        errorMessage: "You are not the owner of this vendor account.",
+      });
+    }
+  };
+
   renderCards() {
     const {
       name,
@@ -289,7 +324,7 @@ class TokenPurchase extends Component {
         style: { overflowWrap: "break-word" },
       },
       {
-        header: vendorEthBalance + " ETH",
+        header: web3.utils.fromWei(vendorEthBalance, 'ether') + " ETH",
         meta: "",
         description: "Vendor ETH balance.",
         color: "orange",
@@ -457,7 +492,7 @@ class TokenPurchase extends Component {
                 content="Withdraw Balance"
                 subheader="Only owner of the vendor can withdraw balance"
               />
-              <Button primary onClick={this.mintToken}>
+              <Button primary onClick={this.withdraw}>
                 Withdraw
               </Button>
             </Grid.Column>
