@@ -452,6 +452,14 @@ class TokenPurchase extends Component {
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
+              <Header
+                as="h2"
+                content="Withdraw Balance"
+                subheader="Only owner of the vendor can withdraw balance"
+              />
+              <Button primary onClick={this.mintToken}>
+                Withdraw
+              </Button>
             </Grid.Column>
 
             <Grid.Column width={8}>
