@@ -9,7 +9,7 @@ import token from "../ethereum/token";
 
 class PropertyIndex extends Component {
   static async getInitialProps() {
-    let propList;
+    let properties;
     let myAccount;
     let balance;
 
@@ -17,33 +17,25 @@ class PropertyIndex extends Component {
       const accounts = await web3.eth.getAccounts();
       myAccount = accounts[0];
       balance = await token.methods.balanceOf(myAccount).call();
-      const properties = await registry.methods.getProperties().call();
+      properties = await registry.methods.getProperties().call();
       console.log("Properties: " + properties);
-
-      propList = await Promise.all(
-        properties.map(async (item, index) => ({
-          ...item,
-          id: index,
-          owner: await property.methods.ownerOf(index).call(),
-        }))
-      );
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
     return {
       myAccount,
       balance,
-      propList,
+      properties,
     };
   }
 
   renderProperties() {
-    if (this.props.propList != null) {
-      return this.props.propList.map((item, index) => {
+    if (this.props.properties != null) {
+      return this.props.properties.map((item, index) => {
         return (
           <PropertyCard
             key={index}
-            id={index}
+            id={item.pid}
             price={item.price}
             location={item.location}
             size={item.size}
@@ -67,10 +59,15 @@ class PropertyIndex extends Component {
         />
         <br />
         <Card.Group itemsPerRow={3}>{this.renderProperties()}</Card.Group>
-        <br /><br />
+        <br />
+        <br />
         <Segment clearing>
-          <Header as='h4' floated='left'>Account: {this.props.myAccount}</Header>
-          <Header as='h4' floated='right'>Balance: {this.props.balance} AWT</Header>
+          <Header as="h4" floated="left">
+            Account: {this.props.myAccount}
+          </Header>
+          <Header as="h4" floated="right">
+            Balance: {this.props.balance} AWT
+          </Header>
         </Segment>
       </Layout>
     );

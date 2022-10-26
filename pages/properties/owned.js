@@ -10,37 +10,29 @@ import { Router } from "../../routes";
 class PropertyOwned extends Component {
   state = {
     approvalLoading: false,
-    rejectionLoading: false
+    rejectionLoading: false,
   };
 
   static async getInitialProps() {
-    let propList;
+    let properties;
     let myAccount;
     let isApproved;
 
     try {
-      const properties = await registry.methods.getProperties().call();
       const accounts = await web3.eth.getAccounts();
       myAccount = accounts[0];
-      isApproved = await property.methods.isApprovedForAll(
-        myAccount, registry.options.address
-      ).call();
+      properties = await registry.methods.getProperties().call();
+      isApproved = await property.methods
+        .isApprovedForAll(myAccount, registry.options.address)
+        .call();
       console.log("Properties: " + properties);
       console.log("isApproved: " + isApproved);
-
-      propList = await Promise.all(
-        properties.map(async (item, index) => ({
-          ...item,
-          id: index,
-          owner: await property.methods.ownerOf(index).call(),
-        }))
-      );
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
     return {
       myAccount,
-      propList,
+      properties,
       isApproved,
     };
   }
@@ -58,7 +50,7 @@ class PropertyOwned extends Component {
         .send({
           from: this.props.myAccount,
         });
-        Router.pushRoute(`/properties/owned`);
+      Router.pushRoute(`/properties/owned`);
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
@@ -66,7 +58,7 @@ class PropertyOwned extends Component {
   };
 
   renderProperties() {
-    return this.props.propList.map((item, index) => {
+    return this.props.properties.map((item, index) => {
       return (
         <PropertyCard
           key={index}
@@ -98,11 +90,22 @@ class PropertyOwned extends Component {
           content="Approval"
           subheader="Set approval for all on this contract so that anyone can buy your properties"
         />
-        <h4>Current approval status: {this.props.isApproved ? "true" : "false"}</h4>
-        <Button loading={this.state.approvalLoading} primary onClick={() => this.setApproval(true)}>
+        <h4>
+          Current approval status: {this.props.isApproved ? "true" : "false"}
+        </h4>
+        <Button
+          loading={this.state.approvalLoading}
+          primary
+          onClick={() => this.setApproval(true)}
+        >
           Set Approval for All
         </Button>
-        <Button loading={this.state.rejectionLoading} basic color="red" onClick={() => this.setApproval(false)}>
+        <Button
+          loading={this.state.rejectionLoading}
+          basic
+          color="red"
+          onClick={() => this.setApproval(false)}
+        >
           Reject for All
         </Button>
       </Layout>
