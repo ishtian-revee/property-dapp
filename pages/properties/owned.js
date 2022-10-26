@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Header, Button, Card, Message } from "semantic-ui-react";
+import { Header, Button, Card, Message, Loader } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import PropertyCard from "../../components/PropertyCard";
 import web3 from "../../ethereum/web3";
@@ -11,6 +11,9 @@ class PropertyOwned extends Component {
   state = {
     approvalLoading: false,
     rejectionLoading: false,
+    isLoading: false,
+    loadingText: "",
+    errorMessage: "",
   };
 
   static async getInitialProps() {
@@ -37,24 +40,54 @@ class PropertyOwned extends Component {
     };
   }
 
-  setApproval = async (approve) => {
-    if (approve) {
-      this.setState({ approvalLoading: true });
+  approveAll = async () => {
+    event.preventDefault();
+    if (this.props.isApproved) {
+      this.setState({ errorMessage: "Already approved for all." });
     } else {
-      this.setState({ rejectionLoading: true });
-    }
+      this.setState({
+        isLoading: true,
+        loadingText: "Approving this contract...",
+        errorMessage: "",
+      });
 
-    try {
-      await property.methods
-        .setApprovalForAll(registry.options.address, approve)
-        .send({
-          from: this.props.myAccount,
-        });
-      Router.pushRoute(`/properties/owned`);
-    } catch (err) {
-      console.log("ERROR: " + err.message);
+      try {
+        await property.methods
+          .setApprovalForAll(registry.options.address, true)
+          .send({
+            from: this.props.myAccount,
+          });
+        Router.pushRoute(`/properties/owned`);
+      } catch (err) {
+        this.setState({ errorMessage: err.message });
+      }
+      this.setState({ isLoading: false, errorMessage: "" });
     }
-    this.setState({ approvalLoading: false, rejectionLoading: false });
+  };
+
+  rejectAll = async () => {
+    event.preventDefault();
+    if (this.props.isApproved) {
+      this.setState({
+        isLoading: true,
+        loadingText: "Rejecting this contract...",
+        errorMessage: "",
+      });
+
+      try {
+        await property.methods
+          .setApprovalForAll(registry.options.address, false)
+          .send({
+            from: this.props.myAccount,
+          });
+        Router.pushRoute(`/properties/owned`);
+      } catch (err) {
+        this.setState({ errorMessage: err.message });
+      }
+      this.setState({ isLoading: false, errorMessage: "" });
+    } else {
+      this.setState({ errorMessage: "Already rejected for all." });
+    }
   };
 
   renderProperties() {
@@ -78,6 +111,14 @@ class PropertyOwned extends Component {
   render() {
     return (
       <Layout>
+        {this.state.isLoading ? (
+          <Loader active inline="centered">
+            {this.state.loadingText}
+          </Loader>
+        ) : null}
+        {this.state.errorMessage ? (
+          <Message error header="Oops!" content={this.state.errorMessage} />
+        ) : null}
         <Header
           as="h2"
           content="My Owned Properties"
@@ -91,21 +132,13 @@ class PropertyOwned extends Component {
           subheader="Set approval for all on this contract so that anyone can buy your properties"
         />
         <h4>
-          Current approval status: {this.props.isApproved ? "true" : "false"}
+          Current approval status:{" "}
+          <strong>{this.props.isApproved ? "Approved" : "Not approved"}</strong>
         </h4>
-        <Button
-          loading={this.state.approvalLoading}
-          primary
-          onClick={() => this.setApproval(true)}
-        >
+        <Button primary onClick={this.approveAll}>
           Set Approval for All
         </Button>
-        <Button
-          loading={this.state.rejectionLoading}
-          basic
-          color="red"
-          onClick={() => this.setApproval(false)}
-        >
+        <Button basic color="red" onClick={this.rejectAll}>
           Reject for All
         </Button>
       </Layout>
