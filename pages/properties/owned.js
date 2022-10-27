@@ -9,8 +9,6 @@ import { Router } from "../../routes";
 
 class PropertyOwned extends Component {
   state = {
-    approvalLoading: false,
-    rejectionLoading: false,
     isLoading: false,
     loadingText: "",
     errorMessage: "",
@@ -111,14 +109,6 @@ class PropertyOwned extends Component {
   render() {
     return (
       <Layout>
-        {this.state.isLoading ? (
-          <Loader active inline="centered">
-            {this.state.loadingText}
-          </Loader>
-        ) : null}
-        {this.state.errorMessage ? (
-          <Message error header="Oops!" content={this.state.errorMessage} />
-        ) : null}
         <Header
           as="h2"
           content="My Owned Properties"
@@ -141,6 +131,14 @@ class PropertyOwned extends Component {
         <Button basic color="red" onClick={this.rejectAll}>
           Reject for All
         </Button>
+        {this.state.isLoading ? (
+          <Loader active inline="centered">
+            {this.state.loadingText}
+          </Loader>
+        ) : null}
+        {this.state.errorMessage ? (
+          <Message error header="Oops!" content={this.state.errorMessage} />
+        ) : null}
       </Layout>
     );
   }
