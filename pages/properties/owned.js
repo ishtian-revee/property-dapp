@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Header, Button, Card, Message, Loader } from "semantic-ui-react";
+import { Header, Button, Card, Message, Loader, Grid } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import PropertyCard from "../../components/PropertyCard";
 import web3 from "../../ethereum/web3";
@@ -12,6 +12,7 @@ class PropertyOwned extends Component {
     isLoading: false,
     loadingText: "",
     errorMessage: "",
+    hasProperties: false,
   };
 
   static async getInitialProps() {
@@ -88,6 +89,10 @@ class PropertyOwned extends Component {
     }
   };
 
+  getProperties = (value) => {
+    this.setState({ hasProperties: value });
+  };
+
   renderProperties() {
     return this.props.properties.map((item, index) => {
       return (
@@ -101,44 +106,79 @@ class PropertyOwned extends Component {
           myAccount={this.props.myAccount}
           owner={item.owner}
           isForOwner={true}
+          onGetProperties={this.getProperties}
         />
       );
     });
   }
 
   render() {
+    console.log("Length: " + this.state.hasProperties);
     return (
       <Layout>
-        <Header
-          as="h2"
-          content="My Owned Properties"
-          subheader="Set your properties as unavailable when you are not willing to sell."
-        />
-        <br />
-        <Card.Group itemsPerRow={3}>{this.renderProperties()}</Card.Group>
-        <Header
-          as="h2"
-          content="Approval"
-          subheader="Set approval for all on this contract so that anyone can buy your properties"
-        />
-        <h4>
-          Current approval status:{" "}
-          <strong>{this.props.isApproved ? "Approved" : "Not approved"}</strong>
-        </h4>
-        <Button primary onClick={this.approveAll}>
-          Set Approval for All
-        </Button>
-        <Button basic color="red" onClick={this.rejectAll}>
-          Reject for All
-        </Button>
-        {this.state.isLoading ? (
-          <Loader active inline="centered">
-            {this.state.loadingText}
-          </Loader>
-        ) : null}
-        {this.state.errorMessage ? (
-          <Message error header="Oops!" content={this.state.errorMessage} />
-        ) : null}
+        {this.state.hasProperties ? (
+          <Grid relaxed>
+            <Grid.Row style={{ marginTop: "10px" }}>
+              <Grid.Column>
+                <Header
+                  as="h2"
+                  content="My Owned Properties"
+                  subheader="Set your properties as unavailable when you are not willing to sell."
+                />
+                <Card.Group itemsPerRow={3}>
+                  {this.renderProperties()}
+                </Card.Group>
+                <Header
+                  as="h2"
+                  content="Approval"
+                  subheader="Set approval for all on this contract so that anyone can buy your properties"
+                />
+                <h4>
+                  Current approval status:
+                  <strong>
+                    {this.props.isApproved ? " Approved" : " Not approved"}
+                  </strong>
+                </h4>
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column width={4}>
+                <Button fluid primary onClick={this.approveAll}>
+                  Set Approval for All
+                </Button>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <Button fluid basic color="red" onClick={this.rejectAll}>
+                  Reject for All
+                </Button>
+              </Grid.Column>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Column>
+                {this.state.isLoading ? (
+                  <Loader active inline="centered">
+                    {this.state.loadingText}
+                  </Loader>
+                ) : null}
+                {this.state.errorMessage ? (
+                  <Message
+                    error
+                    header="Oops!"
+                    content={this.state.errorMessage}
+                  />
+                ) : null}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        ) : (
+          <Message
+            info
+            header="No owned properties!"
+            content="You currently do not have any properties that you own. Please go to the 'Add Property' page and add your properties."
+          />
+        )}
       </Layout>
     );
   }
