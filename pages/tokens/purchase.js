@@ -84,20 +84,27 @@ class TokenPurchase extends Component {
         errorMessage: "AWT amount is not inserted.",
       });
     } else {
-      console.log("Amount: " + (this.state.buyAmount / 100).toString());
-      try {
-        await vendor.methods.buyToken().send({
-          from: this.props.myAccount,
-          value: web3.utils.toWei(
-            (this.state.buyAmount / 100).toString(),
-            "ether"
-          ),
+      if (this.state.buyAmount > this.props.vendorBalance) {
+        this.setState({
+          isLoading: false,
+          errorMessage: "There are insufficient AWT.",
         });
-        Router.pushRoute(`/tokens/purchase`);
-      } catch (err) {
-        this.setState({ errorMessage: err.message });
+      } else {
+        console.log("Amount: " + (this.state.buyAmount / 100).toString());
+        try {
+          await vendor.methods.buyToken().send({
+            from: this.props.myAccount,
+            value: web3.utils.toWei(
+              (this.state.buyAmount / 100).toString(),
+              "ether"
+            ),
+          });
+          Router.pushRoute(`/tokens/purchase`);
+        } catch (err) {
+          this.setState({ errorMessage: err.message });
+        }
+        this.setState({ isLoading: false, buyAmount: "" });
       }
-      this.setState({ isLoading: false, buyAmount: "" });
     }
   };
 
@@ -115,15 +122,22 @@ class TokenPurchase extends Component {
         errorMessage: "AWT amount is not inserted.",
       });
     } else {
-      try {
-        await vendor.methods.sellToken(this.state.sellAmount).send({
-          from: this.props.myAccount,
+      if (this.state.sellAmount > this.props.myBalance) {
+        this.setState({
+          isLoading: false,
+          errorMessage: "There are insufficient AWT.",
         });
-        Router.pushRoute(`/tokens/purchase`);
-      } catch (err) {
-        this.setState({ errorMessage: err.message });
+      } else {
+        try {
+          await vendor.methods.sellToken(this.state.sellAmount).send({
+            from: this.props.myAccount,
+          });
+          Router.pushRoute(`/tokens/purchase`);
+        } catch (err) {
+          this.setState({ errorMessage: err.message });
+        }
+        this.setState({ isLoading: false, sellAmount: "" });
       }
-      this.setState({ isLoading: false, sellAmount: "" });
     }
   };
 
@@ -186,7 +200,7 @@ class TokenPurchase extends Component {
       } else {
         this.setState({
           isLoading: false,
-          errorMessage: "You do not have any mined AWT to transfer.",
+          errorMessage: "You do not have any minted AWT to transfer.",
         });
       }
     } else {
@@ -324,7 +338,7 @@ class TokenPurchase extends Component {
         style: { overflowWrap: "break-word" },
       },
       {
-        header: web3.utils.fromWei(vendorEthBalance, 'ether') + " ETH",
+        header: web3.utils.fromWei(vendorEthBalance, "ether") + " ETH",
         meta: "",
         description: "Vendor ETH balance.",
         color: "orange",
