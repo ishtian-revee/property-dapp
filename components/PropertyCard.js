@@ -63,7 +63,6 @@ class PropertyCard extends Component {
     console.log("Owner: " + owner);
     if (isForOwner) {
       if (owner === myAccount) {
-        this.props.onGetProperties(true);
         return (
           <Card>
             <Card.Content style={{ overflowWrap: "break-word" }}>
