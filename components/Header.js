@@ -13,6 +13,10 @@ const Header = () => {
         <a className="item"><h5>Owned Properties</h5></a>
       </Link>
 
+      <Link route="/properties/history">
+        <a className="item"><h5>Purchase History</h5></a>
+      </Link>
+
       <Link route="/properties/add">
         <a className="item"><h5>Add Property</h5></a>
       </Link>
