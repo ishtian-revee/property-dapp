@@ -3,6 +3,7 @@ import { Header, Message, Loader, Grid, Table } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import web3 from "../../ethereum/web3";
 import registry from "../../ethereum/registry";
+import PurchaseRow from "../../components/PurchaseRow";
 
 class PurchaseHistory extends Component {
   static async getInitialProps() {
@@ -20,7 +21,18 @@ class PurchaseHistory extends Component {
   }
 
   renderRows() {
-
+    return this.props.purchases.map((purchase, index) => {
+      return (
+        <PurchaseRow
+          key={index}
+          id={purchase.pid}
+          owner={purchase.owner}
+          buyer={purchase.buyer}
+          price={purchase.price}
+          time={purchase.time}
+        />
+      );
+    });
   }
 
   render() {
@@ -43,7 +55,6 @@ class PurchaseHistory extends Component {
               <HeaderCell>Time</HeaderCell>
             </Row>
           </Table.Header>
-
           <Body>{this.renderRows()}</Body>
         </Table>
       </Layout>
