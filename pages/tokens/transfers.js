@@ -4,6 +4,19 @@ import Layout from "../../components/Layout";
 import vendor from "../../ethereum/vendor";
 
 class TokenTransfers extends Component {
+  static async getInitialProps() {
+    let purchases;
+    try {
+      purchases = await vendor.methods.getPurchases().call();
+      console.log("awt purchases: " + purchases);
+    } catch (err) {
+      console.log("ERROR: " + err.message);
+    }
+    return {
+      purchases,
+    };
+  }
+
   render() {
     const { Row, HeaderCell, Body } = Table;
     return (
