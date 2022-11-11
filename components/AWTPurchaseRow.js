@@ -7,7 +7,7 @@ class AWTPurchaseRow extends Component {
     const { type, buyer, amount, time } = this.props;
 
     return (
-      <Row>
+      <Row positive={type === 'BUY'} negative={type === 'SELL'}>
         <Cell>{type}</Cell>
         <Cell>{buyer}</Cell>
         <Cell>{amount} AWT</Cell>

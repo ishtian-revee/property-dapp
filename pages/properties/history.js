@@ -57,7 +57,7 @@ class PurchaseHistory extends Component {
           time={formatted}
         />
       );
-    });
+    }).reverse();
   }
 
   render() {
