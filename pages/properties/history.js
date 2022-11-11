@@ -8,7 +8,6 @@ import PurchaseRow from "../../components/PurchaseRow";
 class PurchaseHistory extends Component {
   static async getInitialProps() {
     let purchases;
-
     try {
       purchases = await registry.methods.getPurchases().call();
       console.log("purchases: " + purchases);
@@ -71,14 +70,14 @@ class PurchaseHistory extends Component {
           subheader="List of all the property NFT transactions"
         />
 
-        <Table>
+        <Table celled striped>
           <Table.Header>
             <Row>
               <HeaderCell>Property ID</HeaderCell>
-              <HeaderCell>Owner</HeaderCell>
-              <HeaderCell>Buyer</HeaderCell>
+              <HeaderCell>Owner Account</HeaderCell>
+              <HeaderCell>Buyer Account</HeaderCell>
               <HeaderCell>Price</HeaderCell>
-              <HeaderCell>Time</HeaderCell>
+              <HeaderCell>Date-Time</HeaderCell>
             </Row>
           </Table.Header>
           <Body>{this.renderRows()}</Body>

@@ -25,6 +25,9 @@ const Header = () => {
         <Link route="/tokens/purchase">
           <a className="item"><h5>Get AWT</h5></a>
         </Link>
+        <Link route="/tokens/transfers">
+          <a className="item"><h5>AWT Transfers</h5></a>
+        </Link>
       </Menu.Menu>
     </Menu>
   );
