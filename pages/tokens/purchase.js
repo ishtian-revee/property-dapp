@@ -84,18 +84,20 @@ class TokenPurchase extends Component {
         errorMessage: "AWT amount is not inserted.",
       });
     } else {
-      if (this.state.buyAmount > this.props.vendorBalance) {
+      if (parseInt(this.state.buyAmount) > parseInt(this.props.vendorBalance)) {
         this.setState({
           isLoading: false,
           errorMessage: "There are insufficient AWT.",
         });
       } else {
-        console.log("Amount: " + (this.state.buyAmount / 100).toString());
+        console.log(
+          "Amount: " + (parseInt(this.state.buyAmount) / 100).toString()
+        );
         try {
           await vendor.methods.buyToken().send({
             from: this.props.myAccount,
             value: web3.utils.toWei(
-              (this.state.buyAmount / 100).toString(),
+              (parseInt(this.state.buyAmount) / 100).toString(),
               "ether"
             ),
           });
@@ -122,7 +124,7 @@ class TokenPurchase extends Component {
         errorMessage: "AWT amount is not inserted.",
       });
     } else {
-      if (this.state.sellAmount > this.props.myBalance) {
+      if (parseInt(this.state.sellAmount) > parseInt(this.props.myBalance)) {
         this.setState({
           isLoading: false,
           errorMessage: "There are insufficient AWT.",
@@ -185,7 +187,7 @@ class TokenPurchase extends Component {
     });
 
     if (myAccount === minter) {
-      if (myBalance > 0) {
+      if (parseInt(myBalance) > 0) {
         try {
           await token.methods
             .transferFrom(myAccount, vendorAccount, myBalance)
@@ -263,7 +265,7 @@ class TokenPurchase extends Component {
     });
 
     if (myAccount === minter) {
-      if (vendorEthBalance > 0) {
+      if (parseFloat(vendorEthBalance) > 0) {
         try {
           await vendor.methods.withdraw().send({
             from: myAccount,
