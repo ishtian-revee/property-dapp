@@ -59,72 +59,66 @@ class PropertyCard extends Component {
       owner,
       isForOwner,
     } = this.props;
-    console.log("My account: " + myAccount);
-    console.log("Owner: " + owner);
     if (isForOwner) {
-      if (owner === myAccount) {
-        return (
-          <Card>
-            <Card.Content style={{ overflowWrap: "break-word" }}>
-              <Card.Header>Property #{id}</Card.Header>
-              <Card.Meta>{location}</Card.Meta>
-              <Card.Description>
-                Size <strong>{size} Square Feet</strong>
-                <br />
-                Price: <strong>{price} AWT</strong>
-                <br />
-                Status:{" "}
-                <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
-                <br />
-                <br />
-                Owner: <strong>{owner}</strong>
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <div className="ui two buttons">
-                <Button
-                  basic
-                  loading={this.state.isLoading}
-                  color={isAvailable ? "teal" : "purple"}
-                  onClick={this.setAvailable}
-                >
-                  Set as {isAvailable ? "Unavailable" : "Available"}
-                </Button>
-              </div>
-            </Card.Content>
-          </Card>
-        );
-      }
+      return (
+        <Card>
+          <Card.Content style={{ overflowWrap: "break-word" }}>
+            <Card.Header>Property #{id}</Card.Header>
+            <Card.Meta>{location}</Card.Meta>
+            <Card.Description>
+              Size <strong>{size} Square Feet</strong>
+              <br />
+              Price: <strong>{price} AWT</strong>
+              <br />
+              Status:{" "}
+              <strong>{isAvailable ? "Available" : "Unavailable"}</strong>
+              <br />
+              <br />
+              Owner: <strong>{owner}</strong>
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <div className="ui two buttons">
+              <Button
+                basic
+                loading={this.state.isLoading}
+                color={isAvailable ? "teal" : "purple"}
+                onClick={this.setAvailable}
+              >
+                Set as {isAvailable ? "Unavailable" : "Available"}
+              </Button>
+            </div>
+          </Card.Content>
+        </Card>
+      );
     } else {
-      if (owner !== myAccount && isAvailable) {
-        return (
-          <Card>
-            <Card.Content style={{ overflowWrap: "break-word" }}>
-              <Card.Header>Property #{id}</Card.Header>
-              <Card.Meta>{location}</Card.Meta>
-              <Card.Description>
-                Size <strong>{size} Square Feet</strong>
-                <br />
-                Price: <strong>{price} AWT</strong>
-                <br />
-                <br />
-                Owner: <strong>{owner}</strong>
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <div className="ui two buttons">
-                <Button
-                  primary
-                  loading={this.state.isLoading}
-                  onClick={this.buyProperty}
-                >
-                  Buy Property
-                </Button>
-              </div>
-            </Card.Content>
-          </Card>
-        );
-      }
+      return (
+        <Card>
+          <Card.Content style={{ overflowWrap: "break-word" }}>
+            <Card.Header>Property #{id}</Card.Header>
+            <Card.Meta>{location}</Card.Meta>
+            <Card.Description>
+              Size <strong>{size} Square Feet</strong>
+              <br />
+              Price: <strong>{price} AWT</strong>
+              <br />
+              <br />
+              Owner: <strong>{owner}</strong>
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <div className="ui two buttons">
+              <Button
+                primary
+                loading={this.state.isLoading}
+                onClick={this.buyProperty}
+              >
+                Buy Property
+              </Button>
+            </div>
+          </Card.Content>
+        </Card>
+      );
     }
   }
 }

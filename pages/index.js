@@ -18,7 +18,6 @@ class PropertyIndex extends Component {
       myAccount = accounts[0];
       balance = await token.methods.balanceOf(myAccount).call();
       properties = await registry.methods.getProperties().call();
-      console.log("Properties: " + properties);
     } catch (err) {
       console.log("ERROR: " + err.message);
     }
@@ -31,21 +30,26 @@ class PropertyIndex extends Component {
 
   renderProperties() {
     if (this.props.properties != null) {
-      return this.props.properties.map((item, index) => {
-        return (
-          <PropertyCard
-            key={index}
-            id={item.pid}
-            price={item.price}
-            location={item.location}
-            size={item.size}
-            isAvailable={item.isAvailable}
-            myAccount={this.props.myAccount}
-            owner={item.owner}
-            isForOwner={false}
-          />
-        );
-      });
+      return this.props.properties
+        .filter(
+          (prop) => prop.owner !== this.props.myAccount && prop.isAvailable
+        )
+        .map((item, index) => {
+          console.log("Property item: " + item);
+          return (
+            <PropertyCard
+              key={index}
+              id={item.pid}
+              price={item.price}
+              location={item.location}
+              size={item.size}
+              isAvailable={item.isAvailable}
+              myAccount={this.props.myAccount}
+              owner={item.owner}
+              isForOwner={false}
+            />
+          );
+        });
     }
   }
 

@@ -27,7 +27,6 @@ class PropertyOwned extends Component {
       isApproved = await property.methods
         .isApprovedForAll(myAccount, registry.options.address)
         .call();
-      console.log("Properties: " + properties);
       console.log("isApproved: " + isApproved);
     } catch (err) {
       console.log("ERROR: " + err.message);
@@ -90,21 +89,24 @@ class PropertyOwned extends Component {
   };
 
   renderProperties() {
-    return this.props.properties.map((item, index) => {
-      return (
-        <PropertyCard
-          key={index}
-          id={index}
-          price={item.price}
-          location={item.location}
-          size={item.size}
-          isAvailable={item.isAvailable}
-          myAccount={this.props.myAccount}
-          owner={item.owner}
-          isForOwner={true}
-        />
-      );
-    });
+    return this.props.properties
+      .filter((prop) => prop.owner == this.props.myAccount)
+      .map((item, index) => {
+        console.log("Owned item: " + item);
+        return (
+          <PropertyCard
+            key={index}
+            id={item.pid}
+            price={item.price}
+            location={item.location}
+            size={item.size}
+            isAvailable={item.isAvailable}
+            myAccount={this.props.myAccount}
+            owner={item.owner}
+            isForOwner={true}
+          />
+        );
+      });
   }
 
   render() {
