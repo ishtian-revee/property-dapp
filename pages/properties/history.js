@@ -30,6 +30,7 @@ class PurchaseHistory extends Component {
       hours = hours % 12;
       // To display "0" as "12"
       hours = hours ? hours : 12;
+      hours = hours < 10 ? "0" + hours : hours;
       minutes = minutes < 10 ? "0" + minutes : minutes;
 
       var formatted =
@@ -41,9 +42,9 @@ class PurchaseHistory extends Component {
         "/" +
         t.getFullYear() +
         " - " +
-        ("0" + t.getHours()).slice(-2) +
+        hours +
         ":" +
-        ("0" + t.getMinutes()).slice(-2) +
+        minutes +
         " " +
         newformat;
 

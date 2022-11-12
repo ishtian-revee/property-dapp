@@ -19,43 +19,46 @@ class TokenTransfers extends Component {
   }
 
   renderRows() {
-    return this.props.purchases.map((purchase, index) => {
-      var t = new Date(purchase.time * 1000);
-      var hours = t.getHours();
-      var minutes = t.getMinutes();
-      var newformat = t.getHours() >= 12 ? "PM" : "AM";
+    return this.props.purchases
+      .map((purchase, index) => {
+        var t = new Date(purchase.time * 1000);
+        var hours = t.getHours();
+        var minutes = t.getMinutes();
+        var newformat = t.getHours() >= 12 ? "PM" : "AM";
 
-      // Find current hour in AM-PM Format
-      hours = hours % 12;
-      // To display "0" as "12"
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes;
+        // Find current hour in AM-PM Format
+        hours = hours % 12;
+        // To display "0" as "12"
+        hours = hours ? hours : 12;
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
 
-      var formatted =
-        t.toString().split(" ")[0] +
-        ", " +
-        ("0" + t.getDate()).slice(-2) +
-        "/" +
-        ("0" + (t.getMonth() + 1)).slice(-2) +
-        "/" +
-        t.getFullYear() +
-        " - " +
-        ("0" + t.getHours()).slice(-2) +
-        ":" +
-        ("0" + t.getMinutes()).slice(-2) +
-        " " +
-        newformat;
+        var formatted =
+          t.toString().split(" ")[0] +
+          ", " +
+          ("0" + t.getDate()).slice(-2) +
+          "/" +
+          ("0" + (t.getMonth() + 1)).slice(-2) +
+          "/" +
+          t.getFullYear() +
+          " - " +
+          hours +
+          ":" +
+          minutes +
+          " " +
+          newformat;
 
-      return (
-        <AWTPurchaseRow
-          key={index}
-          type={purchase.purchaseType}
-          buyer={purchase.buyer}
-          amount={purchase.amount}
-          time={formatted}
-        />
-      );
-    }).reverse();
+        return (
+          <AWTPurchaseRow
+            key={index}
+            type={purchase.purchaseType}
+            buyer={purchase.buyer}
+            amount={purchase.amount}
+            time={formatted}
+          />
+        );
+      })
+      .reverse();
   }
 
   render() {
