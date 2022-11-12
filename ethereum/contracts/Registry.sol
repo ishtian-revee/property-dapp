@@ -78,6 +78,7 @@ contract Registry {
         property.safeTransferFrom(propertyOwner, msg.sender, _pid);   // transferring the property token to the buyer
         properties[_pid].isAvailable = false;   // only after succsfull transaction setting the property is not available
         propertyList[_pid].isAvailable = false;
+        propertyList[_pid].owner = msg.sender;  // only after successful transaction setting the new property owner
 
         Purchase memory purchase = Purchase(_pid, msg.sender, propertyOwner, propertyPrice, block.timestamp);
         purchases.push(purchase);   // pushing to the purchase array
