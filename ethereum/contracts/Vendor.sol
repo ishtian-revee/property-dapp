@@ -49,14 +49,14 @@ contract Vendor is Ownable {
         uint256 userBalance = token.balanceOf(msg.sender);      // getting seller contract balance of AWT
         require(userBalance >= _amountToSell, "You have insufficient AWT tokens.");
 
-        uint256 amoutOfETHToTransfer = _amountToSell / tokenPerEther;       // converting to ETH
+        uint256 amoutOfETHToTransfer = (_amountToSell * 1 ether) / tokenPerEther;       // converting to ETH
         uint256 ownerETHBalance = address(this).balance;                    // getting the ETH balance of this vendor contract
-        require(ownerETHBalance >= amoutOfETHToTransfer, "Vendor has insufficient funds.");
+        require((ownerETHBalance * 1 ether) >= amoutOfETHToTransfer, "Vendor has insufficient funds.");
 
         (bool success) = token.transferFrom(msg.sender, address(this), _amountToSell);      // transferring AWT from seller account to vendor account
         require(success, "Failed to transfer tokens from user to vendor.");
 
-        (success, ) = msg.sender.call{ value: amoutOfETHToTransfer * (1 ether) }("");       // transferring ETH to seller account
+        (success, ) = msg.sender.call{ value: amoutOfETHToTransfer }("");       // transferring ETH to seller account
         require(success, "Failed to send ETH to the user.");
 
         Purchase memory purchase = Purchase("SELL", msg.sender, address(this), _amountToSell, block.timestamp);
