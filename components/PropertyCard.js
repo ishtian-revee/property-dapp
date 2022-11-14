@@ -7,32 +7,37 @@ import { Router } from "../routes";
 class PropertyCard extends Component {
   state = {
     isLoading: false,
-    errorMessage: "",
   };
 
   buyProperty = async () => {
     event.preventDefault();
     this.setState({
       isLoading: true,
-      errorMessage: "",
     });
-    try {
-      await registry.methods.buyProperty(this.props.id).send({
-        from: this.props.myAccount,
+    if (parseInt(this.props.balance) < parseInt(this.props.price)) {
+      this.setState({
+        isLoading: false,
       });
-      Router.pushRoute(`/`);
-    } catch (err) {
-      console.log("ERROR: " + err.message);
-      this.setState({ errorMessage: err.message });
+      this.props.onError("You have insufficient AWT");
+    } else {
+      this.props.onError(null);
+      try {
+        await registry.methods.buyProperty(this.props.id).send({
+          from: this.props.myAccount,
+        });
+        Router.pushRoute(`/`);
+      } catch (err) {
+        console.log("ERROR: " + err.message);
+        this.props.onError(err.message);
+      }
+      this.setState({ isLoading: false });
     }
-    this.setState({ isLoading: false, errorMessage: "" });
   };
 
   setAvailable = async () => {
     event.preventDefault();
     this.setState({
       isLoading: true,
-      errorMessage: "",
     });
     try {
       await registry.methods
@@ -42,10 +47,9 @@ class PropertyCard extends Component {
         });
       Router.pushRoute(`/properties/owned`);
     } catch (err) {
-      console.log("ERROR: " + err.message);
-      this.setState({ errorMessage: err.message });
+      this.props.onError(err.message);
     }
-    this.setState({ isLoading: false, errorMessage: "" });
+    this.setState({ isLoading: false });
   };
 
   render() {

@@ -38,6 +38,10 @@ class PropertyOwned extends Component {
     };
   }
 
+  handleError = (err) => {
+    this.setState({ errorMessage: err });
+  };
+
   approveAll = async () => {
     event.preventDefault();
     if (this.props.isApproved) {
@@ -104,6 +108,7 @@ class PropertyOwned extends Component {
             myAccount={this.props.myAccount}
             owner={item.owner}
             isForOwner={true}
+            onError={this.handleError}
           />
         );
       });

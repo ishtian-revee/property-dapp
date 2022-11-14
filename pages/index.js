@@ -8,6 +8,8 @@ import property from "../ethereum/property";
 import token from "../ethereum/token";
 
 class PropertyIndex extends Component {
+  state = { errorMessage: "" };
+
   static async getInitialProps() {
     let properties;
     let myAccount;
@@ -28,6 +30,10 @@ class PropertyIndex extends Component {
     };
   }
 
+  handleError = (err) => {
+    this.setState({ errorMessage: err });
+  };
+
   renderProperties() {
     if (this.props.properties != null) {
       return this.props.properties
@@ -47,6 +53,8 @@ class PropertyIndex extends Component {
               myAccount={this.props.myAccount}
               owner={item.owner}
               isForOwner={false}
+              balance={this.props.balance}
+              onError={this.handleError}
             />
           );
         });
@@ -61,6 +69,9 @@ class PropertyIndex extends Component {
           content="Property Maketplace"
           subheader="Check for property location, size, price, and buy your property"
         />
+        {this.state.errorMessage ? (
+          <Message error header="Oops!" content={this.state.errorMessage} />
+        ) : null}
         <br />
         <Card.Group itemsPerRow={3}>{this.renderProperties()}</Card.Group>
         <br />
