@@ -8,7 +8,7 @@ import property from "../ethereum/property";
 import token from "../ethereum/token";
 
 class PropertyIndex extends Component {
-  
+
   state = { errorMessage: "" };
 
   static async getInitialProps() {
@@ -58,7 +58,7 @@ class PropertyIndex extends Component {
               onError={this.handleError}
             />
           );
-        });
+        }).reverse();
     }
   }
 

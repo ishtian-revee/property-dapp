@@ -111,7 +111,7 @@ class PropertyOwned extends Component {
             onError={this.handleError}
           />
         );
-      });
+      }).reverse();
   }
 
   render() {
