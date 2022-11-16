@@ -11,6 +11,8 @@ This repository contains all the source code of a property decentralized applica
 
 This is a property marketplace where user can mint their property information as an `NFT` and can trade these NFTs to others. So, basically, anyone can buy properties in a form of NFTs. Also, the users need to trade their property NFTs with `a custom ERC20 standard token called AWT (Awesome Token)` instead of native Ethereum currency (ETH).
 
+![xd_prop_1](https://user-images.githubusercontent.com/32171089/202109456-88546ed6-33a4-4276-ae57-49159044df26.png)
+
 # Built With 🛠
 
 Following technologies, frameworks and libraries are used to build this project:
@@ -111,4 +113,7 @@ npm run dev
 
 3. Metamask should be prompted. Connect to your wallet and you are all set! 🎉
 
+# Screenshots 📸
 
+![xd_prop_2](https://user-images.githubusercontent.com/32171089/202109607-d8827946-e6fa-4f2f-8bdc-17b4475a218e.png)
+![xd_awt_1](https://user-images.githubusercontent.com/32171089/202109660-b26f8b8f-c1be-46e6-a62e-43957ba50541.png)
