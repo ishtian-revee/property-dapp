@@ -113,6 +113,22 @@ npm run dev
 
 3. Metamask should be prompted. Connect to your wallet and you are all set! 🎉
 
+# User Flow 💡
+
+1. Initially users can go to the `Get AWT` tab. Here they can see all the basic information about this custom ERC20 token. Also some other information like total available tokens, vendor contract balance, minter account address, etc.
+2. Next a user can purchase or sell AWTs. Before purchasing a key point to remember:
+
+```
+1 ETH = 100 AWT
+```
+So, if a user wants to buy 10 AWT then they need to pay 0.1 ETH.
+
+3. In the `AWT Transfers` tab anyone can see all the AWT transaction records.
+4. Now, on click top left tab `Property DApp` the property marketplace page will load. From here users can buy any property NFT.
+5. On `Owned Properties` page users can see a list of properties that they own. They can change the availability status of these property NFTs at any time. Also, a user needs to set the approval status so that others can buy their NFTs.
+6. On `Add Property` page anyone can add or mint their property as NFT. They just simply need to insert the location, size, and prince (in AWT).
+7. In the `Purchase History` page all the purchase records are displayed.
+
 # Screenshots 📸
 
 ![xd_prop_2](https://user-images.githubusercontent.com/32171089/202109607-d8827946-e6fa-4f2f-8bdc-17b4475a218e.png)
