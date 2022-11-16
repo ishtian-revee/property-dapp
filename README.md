@@ -9,7 +9,7 @@
 
 This repository contains all the source code of a property decentralized application built on `Ethereum Blockchain (Goerli Test Network).` 
 
-This is a property marketplace where user can mint their property information as an `NFT` and can trade these NFTs to others. So, basically, anyone can buy properties in a form of NFTs. Also, the users need to trade their properties with `a custom ERC20 standard token called AWT (Awesome Token)` instead of native Ethereum currency (ETH).
+This is a property marketplace where user can mint their property information as an `NFT` and can trade these NFTs to others. So, basically, anyone can buy properties in a form of NFTs. Also, the users need to trade their property NFTs with `a custom ERC20 standard token called AWT (Awesome Token)` instead of native Ethereum currency (ETH).
 
 # Built With 🛠
 
@@ -48,7 +48,7 @@ Get `Metamask` wallet extension to your browser and set up your Metamask wallet 
 
 ### 🔸 Step 2: Get Test Ethers for Goerli Test Network
 
-Make sure in your Metamask wallet `Goerli Testnet` is selected instead of `Ethereum Mainnet.` Now you need some `Ethers` in your wallet. To get free test ETH you can go to any of the following `Goerli Faucet` links:
+Make sure in your Metamask wallet `Goerli Testnet` is selected instead of `Ethereum Mainnet.` Now you need some test `Ethers` in your wallet. To get free test ETH you can go to any of the following `Goerli Faucet` links:
 
 - https://faucets.chain.link/
 - https://goerlifaucet.com/
@@ -58,3 +58,57 @@ Provide your Metamask account address and get free test ETH.
 ### 🔸 Step 3: Get Your Infura API Key
 
 To communicate with the Ethereum blockchain you need [Infura](https://www.infura.io/) API Key. Go to the Infura website, register, and create a new API key for Web3 API. 
+
+# Project Setup 🏹
+
+### 🔸 System Requirements
+
+Before you begin, make sure you have the following installed:
+
+- [Node.js v16 or above](https://nodejs.org/en/download/)
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git/)
+
+### 🔸 Clone Project and Package Initialization
+
+1. Clone the project by running the following git command in your git-CLI:
+
+```
+git clone https://github.com/ishtian-revee/property-dapp.git
+```
+
+2. Execute the following command in the project root folder:
+
+```jsx
+npm install --legacy-peer-deps
+```
+
+### 🔸 Config File Setup
+
+Go to the `ethereum` directory and create a config file named `config.json`. Then add the following lines to this file: 
+
+```json
+{
+    "mnemonic" : "{YOUR_METAMASK_MNEMONIC_PHRASE}",
+    "infura_api_key" : "{YOUR_GOERLI_INFURA_API_KEY}",
+    "token_address" : "0x8F4cA6f968Ed3276f871C5AF6237FF4e143538d7",
+    "vendor_address": "0x6074B60E0a6659aF74012278Cd55971B5aAE082d",
+    "property_address": "0x9FBB7A582B7Cb5f5Ec952B4564d54dDB9Cc22a7c",
+    "registry_address": "0x5f6d3e3590b0CCbc7CEf36fC519d334261df6B74"
+}
+```
+
+Insert your Metamask Mnemonic Phrase and Goerli Infura API Key to the `"mnemonic"` and `"infura_api_key"` parameters accordingly.
+
+### 🔸 Run The Project
+
+1. Now go back to the root directory and run the following command:
+
+```jsx
+npm run dev
+```
+
+2. After that visit http://locahost:3000/
+
+3. Metamask should be prompted. Connect to your wallet and you are all set! 🎉
+
+
